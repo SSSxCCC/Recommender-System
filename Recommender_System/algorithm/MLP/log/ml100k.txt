@@ -1,0 +1,73 @@
+Python 3.7.5 (tags/v3.7.5:5c02a39a0b, Oct 15 2019, 00:11:34) [MSC v.1916 64 bit (AMD64)] on win32
+runfile('D:/work/PycharmProjects/test/Recommender_System/algorithm/MLP/main.py', wdir='D:/work/PycharmProjects/test/Recommender_System/algorithm/MLP')
+开始读数据ml-100k。共100000条数据，有943个用户，1682个电影。
+（耗时0.18650126457214355秒）
+开始采集负样本，负正样本比例为30，方法为popular。
+（耗时1.9488742351531982秒）
+开始数据切分，test_ratio=0.2, shuffle=True
+（耗时1.0052812099456787秒）
+开始准备topk评估数据，n_sample_user=943
+（耗时5.1057353019714355秒）
+初始化MLP模型：n_user=943, n_item=1682, dim=32, l2=1e-05
+2019-11-14 13:50:14.518382: I tensorflow/core/platform/cpu_feature_guard.cc:142] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2
+开始训练：epochs=100, batch=512
+epoch=1, train_loss=0.177224025, train_auc=0.906104088, train_f1=0.393184304, test_loss=0.178089544, test_auc=0.905038357, test_f1=0.393001854
+[k=10, precision=26.903%, recall=12.553%, f1=17.119%]
+epoch=2, train_loss=0.167999983, train_auc=0.921071291, train_f1=0.43624866, test_loss=0.169186682, test_auc=0.919577777, test_f1=0.434514016
+[k=10, precision=28.823%, recall=13.449%, f1=18.340%]
+epoch=3, train_loss=0.159148321, train_auc=0.931902051, train_f1=0.441710085, test_loss=0.160816923, test_auc=0.929868221, test_f1=0.439217955
+[k=10, precision=31.103%, recall=14.513%, f1=19.791%]
+epoch=4, train_loss=0.153319091, train_auc=0.939159155, train_f1=0.498333335, test_loss=0.155509561, test_auc=0.936644197, test_f1=0.494720638
+[k=10, precision=32.831%, recall=15.319%, f1=20.891%]
+epoch=5, train_loss=0.14923431, train_auc=0.944871783, train_f1=0.534511685, test_loss=0.151785463, test_auc=0.941995919, test_f1=0.529723227
+[k=10, precision=34.539%, recall=16.116%, f1=21.977%]
+epoch=6, train_loss=0.145060167, train_auc=0.94940877, train_f1=0.525945306, test_loss=0.148110017, test_auc=0.945970535, test_f1=0.51855129
+[k=10, precision=35.801%, recall=16.705%, f1=22.780%]
+epoch=7, train_loss=0.141444355, train_auc=0.953149557, train_f1=0.543059945, test_loss=0.144968331, test_auc=0.949285269, test_f1=0.535267889
+[k=10, precision=37.582%, recall=17.536%, f1=23.914%]
+epoch=8, train_loss=0.137979671, train_auc=0.955435753, train_f1=0.577699423, test_loss=0.142246991, test_auc=0.951154947, test_f1=0.568585694
+[k=10, precision=38.006%, recall=17.734%, f1=24.184%]
+epoch=9, train_loss=0.135935724, train_auc=0.958335578, train_f1=0.566415131, test_loss=0.140704483, test_auc=0.953424454, test_f1=0.55585295
+[k=10, precision=39.141%, recall=18.263%, f1=24.906%]
+epoch=10, train_loss=0.133979231, train_auc=0.960494578, train_f1=0.564810634, test_loss=0.139306366, test_auc=0.955147624, test_f1=0.553604722
+[k=10, precision=39.311%, recall=18.342%, f1=25.013%]
+epoch=11, train_loss=0.131087035, train_auc=0.962921262, train_f1=0.588342547, test_loss=0.137080938, test_auc=0.957009256, test_f1=0.574868202
+[k=10, precision=39.989%, recall=18.659%, f1=25.445%]
+epoch=12, train_loss=0.129189357, train_auc=0.964615, train_f1=0.603442, test_loss=0.135604888, test_auc=0.958405316, test_f1=0.588352501
+[k=10, precision=40.339%, recall=18.822%, f1=25.668%]
+epoch=13, train_loss=0.12746717, train_auc=0.966941297, train_f1=0.630770802, test_loss=0.134422272, test_auc=0.960270524, test_f1=0.613965
+[k=10, precision=40.764%, recall=19.020%, f1=25.938%]
+epoch=14, train_loss=0.125857547, train_auc=0.968082786, train_f1=0.628538251, test_loss=0.133515716, test_auc=0.960716128, test_f1=0.610416114
+[k=10, precision=41.039%, recall=19.149%, f1=26.113%]
+epoch=15, train_loss=0.124830723, train_auc=0.969616652, train_f1=0.623271644, test_loss=0.132944986, test_auc=0.961900413, test_f1=0.603700638
+[k=10, precision=41.273%, recall=19.258%, f1=26.262%]
+epoch=16, train_loss=0.122289911, train_auc=0.971397936, train_f1=0.643473089, test_loss=0.131042495, test_auc=0.963253677, test_f1=0.622767806
+[k=10, precision=41.622%, recall=19.421%, f1=26.484%]
+epoch=17, train_loss=0.120110497, train_auc=0.972294509, train_f1=0.646546185, test_loss=0.130252153, test_auc=0.963257253, test_f1=0.623979688
+[k=10, precision=41.771%, recall=19.490%, f1=26.579%]
+epoch=18, train_loss=0.119471639, train_auc=0.973691344, train_f1=0.652976811, test_loss=0.129542291, test_auc=0.964652836, test_f1=0.629589498
+[k=10, precision=41.633%, recall=19.426%, f1=26.491%]
+epoch=19, train_loss=0.118393026, train_auc=0.974552155, train_f1=0.689830244, test_loss=0.129445717, test_auc=0.965182, test_f1=0.663114727
+[k=10, precision=41.919%, recall=19.560%, f1=26.673%]
+epoch=20, train_loss=0.116756387, train_auc=0.97538352, train_f1=0.690502048, test_loss=0.128296658, test_auc=0.965676, test_f1=0.662490368
+[k=10, precision=41.813%, recall=19.510%, f1=26.606%]
+epoch=21, train_loss=0.11472287, train_auc=0.976544797, train_f1=0.694736719, test_loss=0.127056986, test_auc=0.966294229, test_f1=0.666538715
+[k=10, precision=42.619%, recall=19.886%, f1=27.119%]
+epoch=22, train_loss=0.113408722, train_auc=0.977242351, train_f1=0.699154079, test_loss=0.126566887, test_auc=0.966448605, test_f1=0.669021428
+[k=10, precision=42.492%, recall=19.827%, f1=27.038%]
+epoch=23, train_loss=0.11355406, train_auc=0.978206098, train_f1=0.720441401, test_loss=0.127109975, test_auc=0.967288733, test_f1=0.688129961
+[k=10, precision=42.980%, recall=20.054%, f1=27.348%]
+epoch=24, train_loss=0.112260029, train_auc=0.978813, train_f1=0.723213315, test_loss=0.126415089, test_auc=0.967469811, test_f1=0.690013349
+[k=10, precision=42.683%, recall=19.916%, f1=27.159%]
+epoch=25, train_loss=0.111416548, train_auc=0.979232311, train_f1=0.713055968, test_loss=0.125804156, test_auc=0.967765808, test_f1=0.679830611
+[k=10, precision=42.397%, recall=19.782%, f1=26.977%]
+epoch=26, train_loss=0.110679761, train_auc=0.979911, train_f1=0.727527618, test_loss=0.125365764, test_auc=0.968304455, test_f1=0.692096
+[k=10, precision=42.492%, recall=19.827%, f1=27.038%]
+epoch=27, train_loss=0.109600775, train_auc=0.980499268, train_f1=0.72376883, test_loss=0.125019163, test_auc=0.968358934, test_f1=0.688414
+[k=10, precision=42.704%, recall=19.926%, f1=27.173%]
+epoch=28, train_loss=0.108570568, train_auc=0.980276167, train_f1=0.730410337, test_loss=0.12543191, test_auc=0.967485666, test_f1=0.694321
+[k=10, precision=42.471%, recall=19.817%, f1=27.024%]
+epoch=29, train_loss=0.109191619, train_auc=0.98111254, train_f1=0.731348276, test_loss=0.125277609, test_auc=0.968336582, test_f1=0.69370687
+[k=10, precision=42.418%, recall=19.792%, f1=26.991%]
+epoch=30, train_loss=0.108243704, train_auc=0.981874943, train_f1=0.734440744, test_loss=0.12425828, test_auc=0.969120622, test_f1=0.695556223
+[k=10, precision=42.895%, recall=20.015%, f1=27.294%]

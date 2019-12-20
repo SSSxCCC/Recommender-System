@@ -1,0 +1,15 @@
+Python 3.7.5 (tags/v3.7.5:5c02a39a0b, Oct 15 2019, 00:11:34) [MSC v.1916 64 bit (AMD64)] on win32
+runfile('D:/work/PycharmProjects/test/Recommender_System/algorithm/ItemCF/main.py', wdir='D:/work/PycharmProjects/test/Recommender_System/algorithm/ItemCF')
+开始读数据ml-1m。共1000209条数据，有6040个用户，3706个电影。
+（耗时2.1669912338256836秒）
+开始数据切分，test_ratio=0.2, shuffle=True
+（耗时0.8038649559020996秒）
+开始准备topk评估数据，n_sample_user=300
+（耗时3.1937668323516846秒）
+开始计算每两个物品之间的相似度。
+（耗时21.870473384857178秒）
+开始计算用户物品评分矩阵，N=10
+（耗时8.582351922988892秒）
+[k=10, precision=30.133%, recall=9.904%, f1=14.908%]
+[k=36, precision=20.074%, recall=23.751%, f1=21.758%]
+[k=100, precision=12.443%, recall=40.896%, f1=19.081%]

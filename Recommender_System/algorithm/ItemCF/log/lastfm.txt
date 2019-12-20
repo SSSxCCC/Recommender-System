@@ -1,0 +1,15 @@
+Python 3.7.5 (tags/v3.7.5:5c02a39a0b, Oct 15 2019, 00:11:34) [MSC v.1916 64 bit (AMD64)] on win32
+runfile('D:/work/PycharmProjects/test/Recommender_System/algorithm/ItemCF/main.py', wdir='D:/work/PycharmProjects/test/Recommender_System/algorithm/ItemCF')
+开始读数据lastfm。共92834条数据，有1892个用户，17632个艺术家。
+（耗时0.13065052032470703秒）
+开始数据切分，test_ratio=0.2, shuffle=True
+（耗时0.06383013725280762秒）
+开始准备topk评估数据，n_sample_user=300
+（耗时0.5205404758453369秒）
+开始计算每两个物品之间的相似度。
+（耗时19.27783465385437秒）
+开始计算用户物品评分矩阵，N=10
+（耗时18.27271008491516秒）
+[k=10, precision=13.433%, recall=13.429%, f1=13.431%]
+[k=36, precision=6.028%, recall=21.693%, f1=9.434%]
+[k=100, precision=3.020%, recall=30.190%, f1=5.491%]

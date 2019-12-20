@@ -1,0 +1,114 @@
+Python 3.7.5 (tags/v3.7.5:5c02a39a0b, Oct 15 2019, 00:11:34) [MSC v.1916 64 bit (AMD64)] on win32
+runfile('D:/work/PycharmProjects/test/Recommender_System/algorithm/NeuMF/main.py', wdir='D:/work/PycharmProjects/test/Recommender_System/algorithm/NeuMF')
+开始读数据ml-1m。共1000209条数据，有6040个用户，3706个电影。
+（耗时1.9395265579223633秒）
+开始采集负样本，负正样本比例为1，方法为random。
+（耗时7.755364894866943秒）
+开始数据切分，test_ratio=0.2, shuffle=True
+（耗时1.4059407711029053秒）
+开始准备topk评估数据，n_sample_user=300
+（耗时5.312013626098633秒）
+初始化NeuMF模型：n_user=6040, n_item=3706, gmf_dim=16, mlp_dim=64, layers=[64, 32, 16], l2=0
+2019-11-25 09:56:54.927051: I tensorflow/core/platform/cpu_feature_guard.cc:142] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2
+开始训练：epochs=50, batch=512
+epoch=1, train_loss=0.390010983, train_auc=0.905088305, train_f1=0.826564491, test_loss=0.393886507, test_auc=0.902831197, test_f1=0.824436784
+[k=10, precision=23.000%, recall=6.744%, f1=10.430%][k=36, precision=16.259%, recall=17.164%, f1=16.699%][k=100, precision=11.610%, recall=34.044%, f1=17.315%]
+epoch=2, train_loss=0.335348785, train_auc=0.931554437, train_f1=0.856829643, test_loss=0.343663812, test_auc=0.927430212, test_f1=0.852311194
+[k=10, precision=25.133%, recall=7.370%, f1=11.397%][k=36, precision=18.611%, recall=19.646%, f1=19.115%][k=100, precision=13.210%, recall=38.735%, f1=19.701%]
+epoch=3, train_loss=0.305995733, train_auc=0.942990243, train_f1=0.871617675, test_loss=0.318779856, test_auc=0.937341571, test_f1=0.865133047
+[k=10, precision=26.133%, recall=7.663%, f1=11.851%][k=36, precision=19.361%, recall=20.438%, f1=19.885%][k=100, precision=13.400%, recall=39.292%, f1=19.985%]
+epoch=4, train_loss=0.282375515, train_auc=0.951506376, train_f1=0.883699, test_loss=0.300256371, test_auc=0.944411635, test_f1=0.875265
+[k=10, precision=26.200%, recall=7.683%, f1=11.881%][k=36, precision=19.454%, recall=20.536%, f1=19.980%][k=100, precision=13.413%, recall=39.331%, f1=20.004%]
+epoch=5, train_loss=0.261599869, train_auc=0.959032536, train_f1=0.894317865, test_loss=0.284803957, test_auc=0.950181961, test_f1=0.883098423
+[k=10, precision=25.867%, recall=7.585%, f1=11.730%][k=36, precision=19.102%, recall=20.164%, f1=19.619%][k=100, precision=13.437%, recall=39.400%, f1=20.039%]
+epoch=6, train_loss=0.241302311, train_auc=0.964890897, train_f1=0.903596938, test_loss=0.270997971, test_auc=0.954598129, test_f1=0.890092432
+[k=10, precision=23.967%, recall=7.028%, f1=10.868%][k=36, precision=18.750%, recall=19.793%, f1=19.257%][k=100, precision=13.137%, recall=38.520%, f1=19.592%]
+epoch=7, train_loss=0.225152105, train_auc=0.969566405, train_f1=0.909965158, test_loss=0.261223435, test_auc=0.957948625, test_f1=0.894174278
+[k=10, precision=24.233%, recall=7.106%, f1=10.989%][k=36, precision=18.259%, recall=19.275%, f1=18.753%][k=100, precision=12.840%, recall=37.650%, f1=19.149%]
+epoch=8, train_loss=0.210535035, train_auc=0.973581314, train_f1=0.91861558, test_loss=0.253062397, test_auc=0.960638762, test_f1=0.90116179
+[k=10, precision=23.833%, recall=6.989%, f1=10.808%][k=36, precision=18.389%, recall=19.412%, f1=18.886%][k=100, precision=12.907%, recall=37.846%, f1=19.249%]
+epoch=9, train_loss=0.195098668, train_auc=0.976880789, train_f1=0.924846292, test_loss=0.245270774, test_auc=0.962862432, test_f1=0.905603707
+[k=10, precision=23.067%, recall=6.764%, f1=10.460%][k=36, precision=17.741%, recall=18.727%, f1=18.221%][k=100, precision=12.623%, recall=37.015%, f1=18.826%]
+epoch=10, train_loss=0.183851868, train_auc=0.979291141, train_f1=0.928807557, test_loss=0.240490675, test_auc=0.964481056, test_f1=0.908273816
+[k=10, precision=22.067%, recall=6.471%, f1=10.007%][k=36, precision=17.231%, recall=18.190%, f1=17.698%][k=100, precision=12.293%, recall=36.047%, f1=18.334%]
+epoch=11, train_loss=0.172408789, train_auc=0.982005239, train_f1=0.933485627, test_loss=0.237007678, test_auc=0.965891123, test_f1=0.910959601
+[k=10, precision=20.533%, recall=6.021%, f1=9.311%][k=36, precision=16.528%, recall=17.447%, f1=16.975%][k=100, precision=12.043%, recall=35.314%, f1=17.961%]
+epoch=12, train_loss=0.163436815, train_auc=0.983948112, train_f1=0.938528061, test_loss=0.233982801, test_auc=0.966966927, test_f1=0.915172398
+[k=10, precision=20.233%, recall=5.933%, f1=9.175%][k=36, precision=16.056%, recall=16.948%, f1=16.490%][k=100, precision=11.627%, recall=34.092%, f1=17.340%]
+epoch=13, train_loss=0.155251011, train_auc=0.985402942, train_f1=0.941818595, test_loss=0.232665196, test_auc=0.967658639, test_f1=0.91733104
+[k=10, precision=19.333%, recall=5.669%, f1=8.767%][k=36, precision=15.657%, recall=16.528%, f1=16.081%][k=100, precision=11.407%, recall=33.447%, f1=17.012%]
+epoch=14, train_loss=0.147271544, train_auc=0.986794233, train_f1=0.94498843, test_loss=0.233529225, test_auc=0.968001723, test_f1=0.918960452
+[k=10, precision=18.967%, recall=5.562%, f1=8.601%][k=36, precision=15.074%, recall=15.912%, f1=15.482%][k=100, precision=11.373%, recall=33.350%, f1=16.962%]
+epoch=15, train_loss=0.140395552, train_auc=0.988088548, train_f1=0.947885334, test_loss=0.232059151, test_auc=0.968841493, test_f1=0.921470702
+[k=10, precision=18.367%, recall=5.386%, f1=8.329%][k=36, precision=14.481%, recall=15.287%, f1=14.873%][k=100, precision=11.107%, recall=32.568%, f1=16.564%]
+epoch=16, train_loss=0.134925961, train_auc=0.988926291, train_f1=0.949641585, test_loss=0.233506307, test_auc=0.969436049, test_f1=0.923239529
+[k=10, precision=18.300%, recall=5.366%, f1=8.299%][k=36, precision=14.620%, recall=15.433%, f1=15.016%][k=100, precision=11.107%, recall=32.568%, f1=16.564%]
+epoch=17, train_loss=0.128663823, train_auc=0.989869714, train_f1=0.952172339, test_loss=0.235381737, test_auc=0.969494, test_f1=0.924480796
+[k=10, precision=17.633%, recall=5.171%, f1=7.996%][k=36, precision=14.278%, recall=15.072%, f1=14.664%][k=100, precision=10.703%, recall=31.385%, f1=15.963%]
+epoch=18, train_loss=0.123135716, train_auc=0.990630329, train_f1=0.954098582, test_loss=0.236071572, test_auc=0.969804227, test_f1=0.92561233
+[k=10, precision=17.100%, recall=5.014%, f1=7.755%][k=36, precision=14.019%, recall=14.798%, f1=14.398%][k=100, precision=10.793%, recall=31.649%, f1=16.097%]
+epoch=19, train_loss=0.117453359, train_auc=0.991295815, train_f1=0.956175447, test_loss=0.237226203, test_auc=0.970119178, test_f1=0.926982462
+[k=10, precision=17.300%, recall=5.073%, f1=7.845%][k=36, precision=13.824%, recall=14.593%, f1=14.198%][k=100, precision=10.727%, recall=31.453%, f1=15.998%]
+epoch=20, train_loss=0.114608526, train_auc=0.991841316, train_f1=0.957402706, test_loss=0.23967436, test_auc=0.9700827, test_f1=0.927807927
+[k=10, precision=16.633%, recall=4.877%, f1=7.543%][k=36, precision=13.370%, recall=14.114%, f1=13.732%][k=100, precision=10.457%, recall=30.662%, f1=15.595%]
+epoch=21, train_loss=0.110002272, train_auc=0.99240309, train_f1=0.959026694, test_loss=0.243383, test_auc=0.970201135, test_f1=0.929112554
+[k=10, precision=16.067%, recall=4.711%, f1=7.286%][k=36, precision=12.833%, recall=13.547%, f1=13.181%][k=100, precision=10.257%, recall=30.075%, f1=15.297%]
+epoch=22, train_loss=0.104950286, train_auc=0.992952943, train_f1=0.960823357, test_loss=0.245993227, test_auc=0.970336, test_f1=0.929829359
+[k=10, precision=16.833%, recall=4.936%, f1=7.634%][k=36, precision=13.056%, recall=13.782%, f1=13.409%][k=100, precision=10.263%, recall=30.095%, f1=15.307%]
+epoch=23, train_loss=0.101451464, train_auc=0.993364692, train_f1=0.962375224, test_loss=0.249597475, test_auc=0.970380843, test_f1=0.931372762
+[k=10, precision=16.500%, recall=4.838%, f1=7.482%][k=36, precision=12.759%, recall=13.469%, f1=13.104%][k=100, precision=10.180%, recall=29.850%, f1=15.182%]
+epoch=24, train_loss=0.0988794938, train_auc=0.993703365, train_f1=0.963207245, test_loss=0.24981308, test_auc=0.970533252, test_f1=0.931844532
+[k=10, precision=15.600%, recall=4.574%, f1=7.074%][k=36, precision=12.667%, recall=13.371%, f1=13.009%][k=100, precision=9.997%, recall=29.313%, f1=14.909%]
+epoch=25, train_loss=0.0956631154, train_auc=0.994103312, train_f1=0.964439273, test_loss=0.253542542, test_auc=0.970516384, test_f1=0.932605207
+[k=10, precision=15.433%, recall=4.525%, f1=6.999%][k=36, precision=12.130%, recall=12.804%, f1=12.458%][k=100, precision=9.847%, recall=28.873%, f1=14.685%]
+epoch=26, train_loss=0.0928783715, train_auc=0.994499505, train_f1=0.965967298, test_loss=0.255390406, test_auc=0.970353782, test_f1=0.933566153
+[k=10, precision=15.133%, recall=4.437%, f1=6.863%][k=36, precision=11.870%, recall=12.531%, f1=12.192%][k=100, precision=9.533%, recall=27.954%, f1=14.218%]
+epoch=27, train_loss=0.0900475457, train_auc=0.994774044, train_f1=0.966914833, test_loss=0.259496063, test_auc=0.970219493, test_f1=0.933950901
+[k=10, precision=15.300%, recall=4.486%, f1=6.938%][k=36, precision=12.009%, recall=12.677%, f1=12.334%][k=100, precision=9.513%, recall=27.896%, f1=14.188%]
+epoch=28, train_loss=0.0877383128, train_auc=0.994957626, train_f1=0.967476964, test_loss=0.262470484, test_auc=0.970421135, test_f1=0.934679389
+[k=10, precision=15.067%, recall=4.418%, f1=6.832%][k=36, precision=12.157%, recall=12.834%, f1=12.486%][k=100, precision=9.773%, recall=28.658%, f1=14.576%]
+epoch=29, train_loss=0.0879598856, train_auc=0.9950459, train_f1=0.967081368, test_loss=0.269685596, test_auc=0.969899893, test_f1=0.933374107
+[k=10, precision=14.667%, recall=4.301%, f1=6.651%][k=36, precision=11.574%, recall=12.218%, f1=11.887%][k=100, precision=9.423%, recall=27.632%, f1=14.054%]
+epoch=30, train_loss=0.0839311555, train_auc=0.995457828, train_f1=0.96916455, test_loss=0.267795563, test_auc=0.969885409, test_f1=0.934964
+[k=10, precision=14.300%, recall=4.193%, f1=6.485%][k=36, precision=11.139%, recall=11.758%, f1=11.440%][k=100, precision=9.207%, recall=26.996%, f1=13.731%]
+epoch=31, train_loss=0.0818599686, train_auc=0.995654106, train_f1=0.969947, test_loss=0.271680623, test_auc=0.970086694, test_f1=0.936368644
+[k=10, precision=14.700%, recall=4.310%, f1=6.666%][k=36, precision=11.435%, recall=12.071%, f1=11.745%][k=100, precision=9.220%, recall=27.035%, f1=13.751%]
+epoch=32, train_loss=0.0794347301, train_auc=0.995851576, train_f1=0.970663071, test_loss=0.274554, test_auc=0.970193088, test_f1=0.937090874
+[k=10, precision=14.733%, recall=4.320%, f1=6.681%][k=36, precision=11.833%, recall=12.491%, f1=12.153%][k=100, precision=9.360%, recall=27.446%, f1=13.959%]
+epoch=33, train_loss=0.0772598758, train_auc=0.996015668, train_f1=0.971690953, test_loss=0.280151457, test_auc=0.969836891, test_f1=0.937118411
+[k=10, precision=14.467%, recall=4.242%, f1=6.560%][k=36, precision=11.519%, recall=12.159%, f1=11.830%][k=100, precision=9.207%, recall=26.996%, f1=13.731%]
+epoch=34, train_loss=0.0767730176, train_auc=0.996112645, train_f1=0.971675336, test_loss=0.281260073, test_auc=0.969958663, test_f1=0.937689304
+[k=10, precision=14.833%, recall=4.350%, f1=6.727%][k=36, precision=11.472%, recall=12.110%, f1=11.783%][k=100, precision=9.113%, recall=26.723%, f1=13.592%]
+epoch=35, train_loss=0.0744228512, train_auc=0.996363699, train_f1=0.972708642, test_loss=0.284600288, test_auc=0.969554484, test_f1=0.937689364
+[k=10, precision=15.033%, recall=4.408%, f1=6.817%][k=36, precision=11.185%, recall=11.807%, f1=11.488%][k=100, precision=8.967%, recall=26.293%, f1=13.373%]
+epoch=36, train_loss=0.0723723695, train_auc=0.996506333, train_f1=0.973475575, test_loss=0.286454469, test_auc=0.969861567, test_f1=0.938758075
+[k=10, precision=14.700%, recall=4.310%, f1=6.666%][k=36, precision=11.593%, recall=12.237%, f1=11.906%][k=100, precision=9.130%, recall=26.772%, f1=13.616%]
+epoch=37, train_loss=0.0703855827, train_auc=0.996683478, train_f1=0.974354923, test_loss=0.288999408, test_auc=0.969751477, test_f1=0.939205885
+[k=10, precision=15.067%, recall=4.418%, f1=6.832%][k=36, precision=11.583%, recall=12.228%, f1=11.897%][k=100, precision=9.057%, recall=26.557%, f1=13.507%]
+epoch=38, train_loss=0.068756476, train_auc=0.996840596, train_f1=0.975060642, test_loss=0.292837977, test_auc=0.969506383, test_f1=0.939610898
+[k=10, precision=14.367%, recall=4.213%, f1=6.515%][k=36, precision=11.472%, recall=12.110%, f1=11.783%][k=100, precision=8.677%, recall=25.442%, f1=12.940%]
+epoch=39, train_loss=0.0680862, train_auc=0.996926129, train_f1=0.975216329, test_loss=0.294350654, test_auc=0.969503105, test_f1=0.939801157
+[k=10, precision=14.167%, recall=4.154%, f1=6.424%][k=36, precision=11.435%, recall=12.071%, f1=11.745%][k=100, precision=8.760%, recall=25.687%, f1=13.065%]
+epoch=40, train_loss=0.0664889887, train_auc=0.996971905, train_f1=0.975818157, test_loss=0.295073837, test_auc=0.969753206, test_f1=0.940411508
+[k=10, precision=15.133%, recall=4.437%, f1=6.863%][k=36, precision=11.880%, recall=12.540%, f1=12.201%][k=100, precision=9.177%, recall=26.908%, f1=13.686%]
+epoch=41, train_loss=0.0654132366, train_auc=0.997119725, train_f1=0.976187468, test_loss=0.302029341, test_auc=0.969052494, test_f1=0.939711511
+[k=10, precision=14.267%, recall=4.183%, f1=6.470%][k=36, precision=11.148%, recall=11.768%, f1=11.450%][k=100, precision=8.697%, recall=25.501%, f1=12.970%]
+epoch=42, train_loss=0.0630049631, train_auc=0.997262299, train_f1=0.977213442, test_loss=0.302364379, test_auc=0.96925503, test_f1=0.940801919
+[k=10, precision=14.700%, recall=4.310%, f1=6.666%][k=36, precision=11.444%, recall=12.081%, f1=11.754%][k=100, precision=8.743%, recall=25.638%, f1=13.040%]
+epoch=43, train_loss=0.0619507618, train_auc=0.997385204, train_f1=0.977675319, test_loss=0.303573161, test_auc=0.969212532, test_f1=0.941234946
+[k=10, precision=14.600%, recall=4.281%, f1=6.621%][k=36, precision=11.593%, recall=12.237%, f1=11.906%][k=100, precision=8.677%, recall=25.442%, f1=12.940%]
+epoch=44, train_loss=0.0615581051, train_auc=0.997388959, train_f1=0.977636278, test_loss=0.306628644, test_auc=0.969255507, test_f1=0.941405058
+[k=10, precision=14.100%, recall=4.134%, f1=6.394%][k=36, precision=11.454%, recall=12.091%, f1=11.764%][k=100, precision=8.833%, recall=25.902%, f1=13.174%]
+epoch=45, train_loss=0.0610730499, train_auc=0.997398555, train_f1=0.977876246, test_loss=0.31134364, test_auc=0.968901157, test_f1=0.941262126
+[k=10, precision=13.800%, recall=4.047%, f1=6.258%][k=36, precision=11.222%, recall=11.846%, f1=11.526%][k=100, precision=8.527%, recall=25.002%, f1=12.717%]
+epoch=46, train_loss=0.0612837449, train_auc=0.997516751, train_f1=0.977791309, test_loss=0.314721882, test_auc=0.968741119, test_f1=0.941559613
+[k=10, precision=13.933%, recall=4.086%, f1=6.318%][k=36, precision=11.065%, recall=11.680%, f1=11.364%][k=100, precision=8.540%, recall=25.042%, f1=12.736%]
+epoch=47, train_loss=0.0585260876, train_auc=0.997647762, train_f1=0.978789866, test_loss=0.313851863, test_auc=0.968839824, test_f1=0.941940784
+[k=10, precision=13.700%, recall=4.017%, f1=6.213%][k=36, precision=11.037%, recall=11.651%, f1=11.336%][k=100, precision=8.647%, recall=25.354%, f1=12.896%]
+epoch=48, train_loss=0.057245262, train_auc=0.997701645, train_f1=0.979442894, test_loss=0.320946693, test_auc=0.968443036, test_f1=0.942351758
+[k=10, precision=13.600%, recall=3.988%, f1=6.167%][k=36, precision=10.963%, recall=11.573%, f1=11.260%][k=100, precision=8.430%, recall=24.719%, f1=12.572%]
+epoch=49, train_loss=0.0575084761, train_auc=0.997766674, train_f1=0.979164541, test_loss=0.321697414, test_auc=0.968600094, test_f1=0.941660762
+[k=10, precision=13.767%, recall=4.037%, f1=6.243%][k=36, precision=11.278%, recall=11.905%, f1=11.583%][k=100, precision=8.670%, recall=25.423%, f1=12.930%]
+epoch=50, train_loss=0.0561719425, train_auc=0.997724891, train_f1=0.979582071, test_loss=0.323637, test_auc=0.96884948, test_f1=0.943052649
+[k=10, precision=14.633%, recall=4.291%, f1=6.636%][k=36, precision=11.750%, recall=12.403%, f1=12.068%][k=100, precision=8.820%, recall=25.863%, f1=13.154%]
+（耗时2719.4891335964203秒）

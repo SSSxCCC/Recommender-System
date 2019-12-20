@@ -1,0 +1,15 @@
+Python 3.7.5 (tags/v3.7.5:5c02a39a0b, Oct 15 2019, 00:11:34) [MSC v.1916 64 bit (AMD64)] on win32
+runfile('D:/work/PycharmProjects/test/Recommender_System/algorithm/UserCF/main.py', wdir='D:/work/PycharmProjects/test/Recommender_System/algorithm/UserCF')
+开始读数据ml-100k。共100000条数据，有943个用户，1682个电影。
+（耗时0.1685492992401123秒）
+开始数据切分，test_ratio=0.2, shuffle=True
+（耗时0.06779003143310547秒）
+开始准备topk评估数据，n_sample_user=300
+（耗时0.30507874488830566秒）
+开始计算每两个用户之间的相似度。
+（耗时0.8786776065826416秒）
+开始计算用户物品评分矩阵，N=80
+（耗时1.3570692539215088秒）
+[k=10, precision=34.033%, recall=15.585%, f1=21.380%]
+[k=36, precision=21.398%, recall=35.277%, f1=26.638%]
+[k=100, precision=12.480%, recall=57.152%, f1=20.486%]
