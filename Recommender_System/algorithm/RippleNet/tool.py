@@ -1,8 +1,10 @@
+from Recommender_System.utility.decorator import logger
 from typing import List, Tuple, Dict
 from collections import defaultdict
 import numpy as np
 
 
+@logger('得到每个用户在训练集上的正反馈物品集合')
 def get_user_positive_item_list(train_data: List[Tuple[int, int, int]]) -> Dict[int, List[int]]:
     user_positive_item_list = defaultdict(list)
     for user_id, item_id, label in train_data:
@@ -11,6 +13,7 @@ def get_user_positive_item_list(train_data: List[Tuple[int, int, int]]) -> Dict[
     return user_positive_item_list
 
 
+@logger('根据知识图谱结构构建有向图')
 def construct_directed_kg(kg: List[Tuple[int, int, int]]) -> Dict[int, List[Tuple[int, int]]]:
     kg_dict = defaultdict(list)
     for head_id, relation_id, tail_id in kg:
@@ -18,6 +21,7 @@ def construct_directed_kg(kg: List[Tuple[int, int, int]]) -> Dict[int, List[Tupl
     return kg_dict
 
 
+@logger('得到每个用户在知识图谱有向图上每跳的三元组，', ('hop_size', 'ripple_size'))
 def get_ripple_set(hop_size: int, ripple_size: int, user_positive_item_list: Dict[int, List[int]],
                    kg_dict: Dict[int, List[Tuple[int, int]]]) -> Dict[int, List[Tuple[List[int], List[int], List[int]]]]:
     ripple_set = defaultdict(list)  # user -> [(hop_0_heads, hop_0_relations, hop_0_tails), (hop_1_heads, hop_1_relations, hop_1_tails), ...]

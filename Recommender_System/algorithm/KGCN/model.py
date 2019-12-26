@@ -1,13 +1,14 @@
+from typing import List
 import tensorflow as tf
 from tensorflow.keras.regularizers import l2 as reg_l2
 from Recommender_System.algorithm.KGCN.layer import SumAggregator
+from Recommender_System.utility.decorator import logger
 
 
-def KGCN_model(n_user: int, n_entity: int, n_relation: int, adj_entity, adj_relation,
-               dim=16, iter_size=2, l2=1e-7) -> tf.keras.Model:
-    neighbor_size = len(adj_entity[0])
-    print('初始化KGCN模型：n_user=', n_user, ', n_entity=', n_entity, ', n_relation=', n_relation,
-          ', dim=', dim, ', iter_size=', iter_size, ', neighbor_size=', neighbor_size, ', l2=', l2, sep='')
+@logger('初始化KGCN模型：', ('n_user', 'n_entity', 'n_relation', 'neighbor_size', 'iter_size', 'dim', 'l2'))
+def KGCN_model(n_user: int, n_entity: int, n_relation: int, adj_entity: List[List[int]], adj_relation: List[List[int]],
+               neighbor_size: int, iter_size=2, dim=16, l2=1e-7) -> tf.keras.Model:
+    assert neighbor_size == len(adj_entity[0]) == len(adj_relation[0])
 
     user_id = tf.keras.Input(shape=(), name='user_id', dtype=tf.int32)
     item_id = tf.keras.Input(shape=(), name='item_id', dtype=tf.int32)
@@ -27,17 +28,17 @@ def KGCN_model(n_user: int, n_entity: int, n_relation: int, adj_entity, adj_rela
         entities.append(neighbor_entities)
         relations.append(neighbor_relations)
 
-    entities = [entity_embedding(entity) for entity in entities]  # [(batch, 1, dim), (batch, n_neighbor, dim), (batch, n_neighbor^2, dim), ..., (batch, n_neighbor^n_iter, dim)]
-    relations = [relation_embedding(relation) for relation in relations]  # [(batch, n_neighbor, dim), (batch, n_neighbor^2, dim), ..., (batch, n_neighbor^n_iter, dim)]
+    entity_vectors = [entity_embedding(entity) for entity in entities]  # [(batch, 1, dim), (batch, n_neighbor, dim), (batch, n_neighbor^2, dim), ..., (batch, n_neighbor^n_iter, dim)]
+    relation_vectors = [relation_embedding(relation) for relation in relations]  # [(batch, n_neighbor, dim), (batch, n_neighbor^2, dim), ..., (batch, n_neighbor^n_iter, dim)]
     for it in range(iter_size):
         aggregator = SumAggregator(activation='relu' if it < iter_size - 1 else 'tanh', kernel_regularizer=reg_l2(l2))
         entities_next = []
         for hop in range(iter_size - it):
-            inputs = (entities[hop], entities[hop + 1], relations[hop], u)
+            inputs = (entity_vectors[hop], entity_vectors[hop + 1], relation_vectors[hop], u)
             vector = aggregator(inputs, neighbor_size=neighbor_size)
             entities_next.append(vector)
-        entities = entities_next
-    i = flatten(entities[0])  # batch, dim
+        entity_vectors = entities_next
+    i = flatten(entity_vectors[0])  # batch, dim
 
     score = tf.sigmoid(tf.reduce_sum(u * i, axis=1))
     return tf.keras.Model(inputs=[user_id, item_id], outputs=score)

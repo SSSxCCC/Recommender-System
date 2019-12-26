@@ -1,22 +1,10 @@
 import tensorflow as tf
 from tensorflow.keras.regularizers import l2 as reg_l2
+from Recommender_System.utility.decorator import logger
 
 
-class GMF(tf.keras.Model):
-    def __init__(self, n_user, n_item, dim=8, l2=1e-6):
-        super(GMF, self).__init__()
-        print('初始化GMF模型：n_user=', n_user, ', n_item=', n_item, ', dim=', dim, ', l2=', l2, sep='')
-        self.user_embedding = tf.keras.layers.Embedding(n_user, dim, embeddings_regularizer=reg_l2(l2))
-        self.item_embedding = tf.keras.layers.Embedding(n_item, dim, embeddings_regularizer=reg_l2(l2))
-        self.out = tf.keras.layers.Dense(1, activation='sigmoid', kernel_regularizer=reg_l2(l2))
-
-    def call(self, inputs):  # user_id, item_id
-        x = self.user_embedding(inputs['user_id']) * self.item_embedding(inputs['item_id'])
-        return self.out(x)
-
-
+@logger('初始化GMF模型：', ('n_user', 'n_item', 'dim', 'l2'))
 def GMF_model(n_user, n_item, dim=8, l2=1e-6) -> tf.keras.Model:
-    print('初始化GMF模型：n_user=', n_user, ', n_item=', n_item, ', dim=', dim, ', l2=', l2, sep='')
     user_id = tf.keras.Input(shape=(), name='user_id', dtype=tf.int32)
     u = tf.keras.layers.Embedding(n_user, dim, embeddings_regularizer=reg_l2(l2))(user_id)
     item_id = tf.keras.Input(shape=(), name='item_id', dtype=tf.int32)

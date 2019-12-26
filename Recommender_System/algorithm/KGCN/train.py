@@ -1,6 +1,7 @@
 import time
 from typing import List, Tuple
 import tensorflow as tf
+from Recommender_System.utility.decorator import logger
 from Recommender_System.utility.evaluation import TopkData
 from Recommender_System.algorithm.train import log, topk
 
@@ -33,6 +34,7 @@ def _get_score_fn(model):
     return score_fn
 
 
+@logger('开始训练，', ('epochs', 'batch'))
 def train(model: tf.keras.Model, train_data: List[Tuple[int, int, int]], test_data: List[Tuple[int, int, int]],
           topk_data: TopkData, optimizer=None, epochs=100, batch=512):
     if optimizer is None:
@@ -80,7 +82,7 @@ def train(model: tf.keras.Model, train_data: List[Tuple[int, int, int]], test_da
 
         @tf.function
         def test_batch(ui, label):
-            score = model(ui, training=False)
+            score = model(ui)
             loss = loss_object(label, score) + sum(model.losses)
             update_metrics(loss, label, score)
 
@@ -103,7 +105,4 @@ def train(model: tf.keras.Model, train_data: List[Tuple[int, int, int]], test_da
 
             print('epoch_time=', time.time() - epoch_start_time, 's', sep='')
 
-    print('开始训练：epochs=', epochs, ', batch=', batch, sep='')
-    start_time = time.time()
     train_model()
-    print('（耗时', time.time() - start_time, '秒）', sep='')

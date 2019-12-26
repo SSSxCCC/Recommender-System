@@ -1,8 +1,8 @@
 from typing import List, Tuple
 import tensorflow as tf
-import time
 from Recommender_System.algorithm.train import RsCallback
 from Recommender_System.utility.evaluation import TopkData
+from Recommender_System.utility.decorator import logger
 
 
 class _KgeCallback(tf.keras.callbacks.Callback):
@@ -22,6 +22,7 @@ def _get_score_fn(model):
     return _score_fn
 
 
+@logger('开始训练，', ('epochs', 'batch'))
 def train(model_rs: tf.keras.Model, model_kge: tf.keras.Model, train_data: List[Tuple[int, int, int]],
           test_data: List[Tuple[int, int, int]], kg: List[Tuple[int, int, int]], topk_data: TopkData,
           optimizer_rs=None, optimizer_kge=None, kge_interval=3, epochs=100, batch=512):
@@ -29,9 +30,6 @@ def train(model_rs: tf.keras.Model, model_kge: tf.keras.Model, train_data: List[
         optimizer_rs = tf.keras.optimizers.Adam()
     if optimizer_kge is None:
         optimizer_kge = tf.keras.optimizers.Adam()
-
-    print('开始训练：epochs=', epochs, ', batch=', batch, sep='')
-    start_time = time.time()
 
     def xy(data):
         user_id = tf.constant([d[0] for d in data], dtype=tf.int32)
@@ -60,5 +58,3 @@ def train(model_rs: tf.keras.Model, model_kge: tf.keras.Model, train_data: List[
                      callbacks=[RsCallback(topk_data, _get_score_fn(model_rs))], initial_epoch=epoch)
         if epoch % kge_interval == 0:
             model_kge.fit(kg_ds, epochs=epoch + 1, verbose=0, callbacks=[_KgeCallback()], initial_epoch=epoch)
-
-    print('（耗时', time.time() - start_time, '秒）', sep='')

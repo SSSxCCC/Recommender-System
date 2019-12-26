@@ -1,13 +1,12 @@
 import tensorflow as tf
 from tensorflow.keras.regularizers import l2 as reg_l2
 from Recommender_System.algorithm.RippleNet.layer import Embedding2D
+from Recommender_System.utility.decorator import logger
 
 
+@logger('初始化RippleNet模型：', ('n_entity', 'n_relation', 'dim', 'hop_size', 'ripple_size', 'kge_weight', 'l2'))
 def RippleNet_model(n_entity: int, n_relation: int, dim=16, hop_size=2, ripple_size=32, kge_weight=0.01, l2=1e-7,
                     item_update_mode='plus_transform', use_all_hops=True) -> tf.keras.Model:
-    print('初始化RippleNet模型：n_entity=', n_entity, ', n_relation=', n_relation, ', dim=', dim,
-          ', hop_size=', hop_size, ', ripple_size=', ripple_size, ', kge_weight=', kge_weight, ', l2=', l2, sep='')
-
     item_id = tf.keras.Input(shape=(), name='item_id', dtype=tf.int32)
     ripple_h, ripple_r, ripple_t = [], [], []
     for hop in range(hop_size):

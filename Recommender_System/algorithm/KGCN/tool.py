@@ -1,8 +1,10 @@
+from Recommender_System.utility.decorator import logger
 from typing import List, Tuple, Dict
 from collections import defaultdict
 import numpy as np
 
 
+@logger('根据知识图谱结构构建无向图')
 def construct_undirected_kg(kg: List[Tuple[int, int, int]]) -> Dict[int, List[Tuple[int, int]]]:
     kg_dict = defaultdict(list)
     for head_id, relation_id, tail_id in kg:
@@ -11,6 +13,7 @@ def construct_undirected_kg(kg: List[Tuple[int, int, int]]) -> Dict[int, List[Tu
     return kg_dict
 
 
+@logger('根据知识图谱无向图构建邻接表，', ('n_entity', 'neighbor_size'))
 def get_adj_list(kg_dict: Dict[int, List[Tuple[int, int]]], n_entity: int, neighbor_size: int) ->\
         Tuple[List[List[int]], List[List[int]]]:
     adj_entity, adj_relation = [None for _ in range(n_entity)], [None for _ in range(n_entity)]

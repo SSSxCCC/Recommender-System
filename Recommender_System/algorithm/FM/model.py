@@ -1,10 +1,10 @@
 import tensorflow as tf
 from tensorflow.keras.regularizers import l2 as reg_l2
+from Recommender_System.utility.decorator import logger
 
 
+@logger('初始化FM模型：', ('n_user', 'n_item', 'dim', 'l2'))
 def FM_model(n_user: int, n_item: int, dim=8, l2=1e-6) -> tf.keras.Model:
-    print('初始化FM模型：n_user=', n_user, ', n_item=', n_item, ', dim=', dim, ', l2=', l2, sep='')
-
     user_id = tf.keras.Input(shape=(), name='user_id', dtype=tf.int32)
     user_embedding = tf.keras.layers.Embedding(n_user, dim, embeddings_regularizer=reg_l2(l2))(user_id)
     user_bias = tf.keras.layers.Embedding(n_user, 1, embeddings_initializer='zeros')(user_id)

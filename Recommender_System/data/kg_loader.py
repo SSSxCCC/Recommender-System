@@ -1,16 +1,14 @@
 import os
-import time
 from typing import Dict, List, Tuple, Callable
 from Recommender_System.data import data_loader, data_process
+from Recommender_System.utility.decorator import logger
 
-# 记下kg文件夹的路径，确保其它py文件调用时读数据路径正确
+# 记下kg文件夹的路径，确保其它py文件调用时读文件路径正确
 kg_path = os.path.join(os.path.dirname(__file__), 'kg')
 
 
+@logger('开始读物品实体映射关系')
 def _read_item_id2entity_id_file(relative_path: str) -> Tuple[Dict[int, int], Dict[int, int]]:
-    print('开始读', relative_path, sep='')
-    start_time = time.time()
-    
     item_to_entity = {}
     entity_to_item = {}
     with open(os.path.join(kg_path, relative_path)) as f:
@@ -20,16 +18,12 @@ def _read_item_id2entity_id_file(relative_path: str) -> Tuple[Dict[int, int], Di
             entity_id = int(values[1])
             item_to_entity[item_id] = entity_id
             entity_to_item[entity_id] = item_id
-
-    print('（耗时', time.time() - start_time, '秒）', sep='')
     return item_to_entity, entity_to_item
 
 
+@logger('开始读知识图谱结构图：', ('keep_all_head',))
 def _read_kg_file(relative_path: str, entity_id_old2new: Dict[int, int], keep_all_head=True) ->\
         Tuple[List[Tuple[int, int, int]], int, int]:
-    print('开始读', relative_path, sep='')
-    start_time = time.time()
-
     n_entity = len(entity_id_old2new)
     relation_id_old2new = {}
     n_relation = 0
@@ -59,10 +53,10 @@ def _read_kg_file(relative_path: str, entity_id_old2new: Dict[int, int], keep_al
 
             kg.append((head, relation, tail))
 
-    print('（耗时', time.time() - start_time, '秒）', sep='')
     return kg, n_entity, n_relation
 
 
+@logger('----------开始载入带知识图谱的数据集：', ('kg_directory',), '----------带知识图谱的数据集载入完成', log_time=False)
 def _read_data_with_kg(data_loader_fn: Callable[[], List[tuple]], kg_directory: str, negative_sample_threshold=0, keep_all_head=True) ->\
         Tuple[List[Tuple[int, int, int]], List[Tuple[int, int, int]], int, int, int, int]:
     old_item_to_old_entity, old_entity_to_old_item = _read_item_id2entity_id_file(os.path.join(kg_directory, 'item_id2entity_id.txt'))
@@ -85,6 +79,10 @@ def lastfm_kg_MKR() -> Tuple[List[Tuple[int, int, int]], List[Tuple[int, int, in
 
 def ml1m_kg_RippleNet() -> Tuple[List[Tuple[int, int, int]], List[Tuple[int, int, int]], int, int, int, int]:
     return _read_data_with_kg(data_loader.ml1m, 'kg_ml1m&RippleNet', negative_sample_threshold=4)
+
+
+def ml20_kg_KGCN() -> Tuple[List[Tuple[int, int, int]], List[Tuple[int, int, int]], int, int, int, int]:
+    return _read_data_with_kg(data_loader.ml20m, 'kg_ml20m&KGCN', negative_sample_threshold=4)
 
 
 if __name__ == '__main__':

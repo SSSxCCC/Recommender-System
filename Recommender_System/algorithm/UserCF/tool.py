@@ -1,12 +1,10 @@
 import math
-import time
 from typing import List
+from Recommender_System.utility.decorator import logger
 
 
+@logger('开始计算每两个用户之间的相似度')
 def user_similarity(train_data: list, n_user: int, n_item: int) -> List[List[float]]:
-    print('开始计算每两个用户之间的相似度。')
-    start_time = time.time()
-
     train_item_users = [[] for _ in range(n_item)]  # train_item_users[i]是对物品i有过正反馈的所有用户列表
     N = [0 for _ in range(n_user)]  # N[u]是用户u有过正反馈的所有物品的数量
     for user_id, item_id, _ in train_data:
@@ -27,14 +25,11 @@ def user_similarity(train_data: list, n_user: int, n_item: int) -> List[List[flo
                 W[i][j] /= math.sqrt(N[i] * N[j])
                 W[j][i] = W[i][j]
 
-    print('（耗时', time.time() - start_time, '秒）', sep='')
     return W
 
 
+@logger('开始计算用户物品评分矩阵，', ('N',))
 def user_item_score(train_data: list, n_user: int, n_item: int, W: List[List[float]], N=80) -> List[List[float]]:
-    print('开始计算用户物品评分矩阵，', 'N=', N, sep='')
-    start_time = time.time()
-
     # 得到训练集中每个用户所有有过正反馈物品集合
     train_user_items = [set() for _ in range(n_user)]
     for user_id, item_id, _ in train_data:
@@ -52,5 +47,4 @@ def user_item_score(train_data: list, n_user: int, n_item: int, W: List[List[flo
             for item_id in train_user_items[similar_user_id] - train_user_items[user_id]:
                 scores[user_id][item_id] += similarity_factor
 
-    print('（耗时', time.time() - start_time, '秒）', sep='')
     return scores

@@ -1,7 +1,7 @@
 from typing import List, Tuple, Callable, Dict
 import tensorflow as tf
-import time
 from Recommender_System.utility.evaluation import TopkData, topk_evaluate
+from Recommender_System.utility.decorator import logger
 
 
 def _prepare_ds(train_data: List[Tuple[int, int, int]], test_data: List[Tuple[int, int, int]],
@@ -41,15 +41,19 @@ def get_score_fn(model):
     return lambda ui: _fast_model({k: tf.constant(v, dtype=tf.int32) for k, v in ui.items()}).numpy()
 
 
-#@tf.function
 def _evaluate(model, dataset, loss_object, mean_metric=tf.keras.metrics.Mean(), auc_metric=tf.keras.metrics.AUC(),
               precision_metric=tf.keras.metrics.Precision(), recall_metric=tf.keras.metrics.Recall()):
     for metric in [mean_metric, auc_metric, precision_metric, recall_metric]:
         tf.py_function(metric.reset_states, [], [])
 
-    for ui, label in dataset:
+    @tf.function
+    def evaluate_batch(ui, label):
         score = tf.squeeze(model(ui))
         loss = loss_object(label, score) + sum(model.losses)
+        return score, loss
+
+    for ui, label in dataset:
+        score, loss = evaluate_batch(ui, label)
 
         mean_metric.update_state(loss)
         auc_metric.update_state(label, score)
@@ -60,12 +64,11 @@ def _evaluate(model, dataset, loss_object, mean_metric=tf.keras.metrics.Mean(), 
 
 
 def _train_graph(model, train_ds, test_ds, topk_data, optimizer, loss_object, epochs):
-    @tf.function
     def train_model():
-        #@tf.function
+        @tf.function
         def train_batch(ui, label):
             with tf.GradientTape() as tape:
-                score = tf.squeeze(model(ui))
+                score = tf.squeeze(model(ui, training=True))
                 loss = loss_object(label, score) + sum(model.losses)
             gradients = tape.gradient(loss, model.trainable_variables)
             optimizer.apply_gradients(zip(gradients, model.trainable_variables))
@@ -104,6 +107,7 @@ def _train_eager(model, train_ds, test_ds, topk_data, optimizer, loss_object, ep
               callbacks=[RsCallback(topk_data, get_score_fn(model))])
 
 
+@logger('开始训练，', ('epochs', 'batch', 'execution'))
 def train(model: tf.keras.Model, train_data: List[Tuple[int, int, int]], test_data: List[Tuple[int, int, int]],
           topk_data: TopkData, optimizer=None, loss_object=None, epochs=100, batch=512, execution='eager') -> None:
     """
@@ -125,17 +129,11 @@ def train(model: tf.keras.Model, train_data: List[Tuple[int, int, int]], test_da
         loss_object = tf.keras.losses.BinaryCrossentropy()
 
     train_ds, test_ds = _prepare_ds(train_data, test_data, batch)
-    if execution == 'eager':
-        train_fn = _train_eager
-    else:
-        train_fn = _train_graph
-
-    print('开始训练：epochs=', epochs, ', batch=', batch, ', execution=', execution, sep='')
-    start_time = time.time()
+    train_fn = _train_eager if execution == 'eager' else _train_graph
     train_fn(model, train_ds, test_ds, topk_data, optimizer, loss_object, epochs)
-    print('（耗时', time.time() - start_time, '秒）', sep='')
 
 
+@logger('开始测试，', ('batch',))
 def test(model: tf.keras.Model, train_data: List[Tuple[int, int, int]], test_data: List[Tuple[int, int, int]],
          topk_data: TopkData, loss_object=None, batch=512) -> None:
     """
@@ -151,11 +149,8 @@ def test(model: tf.keras.Model, train_data: List[Tuple[int, int, int]], test_dat
     if loss_object is None:
         loss_object = tf.keras.losses.BinaryCrossentropy()
 
-    print('开始测试：batch=', batch, sep='')
-    start_time = time.time()
     train_ds, test_ds = _prepare_ds(train_data, test_data, batch)
     train_loss, train_auc, train_precision, train_recall = _evaluate(model, train_ds, loss_object)
     test_loss, test_auc, test_precision, test_recall = _evaluate(model, test_ds, loss_object)
     log(-1, train_loss, train_auc, train_precision, train_recall, test_loss, test_auc, test_precision, test_recall)
     topk(topk_data, get_score_fn(model))
-    print('（耗时', time.time() - start_time, '秒）', sep='')

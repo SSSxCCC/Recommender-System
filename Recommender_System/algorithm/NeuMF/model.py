@@ -1,36 +1,11 @@
 from typing import Tuple
 import tensorflow as tf
 from tensorflow.keras.regularizers import l2 as reg_l2
+from Recommender_System.utility.decorator import logger
 
 
-class NeuMF(tf.keras.Model):
-    def __init__(self, n_user: int, n_item: int, gmf_dim=8, mlp_dim=32, layers=[32, 16, 8], l2=1e-6):
-        super(NeuMF, self).__init__()
-        print('初始化NeuMF模型：n_user=', n_user, ', n_item=', n_item, ', gmf_dim=', gmf_dim,
-              ', mlp_dim=', mlp_dim, ', layers=', layers, ', l2=', l2, sep='')
-        self.gmf_user_embedding = tf.keras.layers.Embedding(n_user, gmf_dim, embeddings_regularizer=reg_l2(l2))
-        self.gmf_item_embedding = tf.keras.layers.Embedding(n_item, gmf_dim, embeddings_regularizer=reg_l2(l2))
-
-        self.mlp_user_embedding = tf.keras.layers.Embedding(n_user, mlp_dim, embeddings_regularizer=reg_l2(l2))
-        self.mlp_item_embedding = tf.keras.layers.Embedding(n_item, mlp_dim, embeddings_regularizer=reg_l2(l2))
-        self.dense_layers = [tf.keras.layers.Dense(n, activation='relu', kernel_regularizer=reg_l2(l2)) for n in layers]
-
-        self.out = tf.keras.layers.Dense(1, activation='sigmoid', kernel_regularizer=reg_l2(l2))
-
-    def call(self, inputs):  # user_id, item_id
-        gmf_layer = self.gmf_user_embedding(inputs['user_id']) * self.gmf_item_embedding(inputs['item_id'])
-
-        mlp_layer = tf.concat([self.mlp_user_embedding(inputs['user_id']), self.mlp_item_embedding(inputs['item_id'])], axis=1)
-        for dense_layer in self.dense_layers:
-            mlp_layer = dense_layer(mlp_layer)
-
-        neumf_layer = tf.concat([gmf_layer, mlp_layer], axis=1)
-        return self.out(neumf_layer)
-
-
+@logger('初始化NeuMF模型：', ('n_user', 'n_item', 'gmf_dim', 'mlp_dim', 'layers', 'l2'))
 def NeuMF_model(n_user: int, n_item: int, gmf_dim=8, mlp_dim=32, layers=[32, 16, 8], l2=1e-6) -> Tuple[tf.keras.Model, tf.keras.Model, tf.keras.Model]:
-    print('初始化NeuMF模型：n_user=', n_user, ', n_item=', n_item, ', gmf_dim=', gmf_dim,
-          ', mlp_dim=', mlp_dim, ', layers=', layers, ', l2=', l2, sep='')
     user_id = tf.keras.Input(shape=(), name='user_id', dtype=tf.int32)
     item_id = tf.keras.Input(shape=(), name='item_id', dtype=tf.int32)
 

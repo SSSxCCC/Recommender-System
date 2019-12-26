@@ -1,6 +1,7 @@
 import time
 from typing import List, Tuple, Dict
 import tensorflow as tf
+from Recommender_System.utility.decorator import logger
 from Recommender_System.utility.evaluation import TopkData
 from Recommender_System.algorithm.train import log, topk
 
@@ -27,6 +28,7 @@ def _get_score_fn(model, ripple_set):
     return score_fn
 
 
+@logger('开始训练，', ('epochs', 'batch'))
 def train(model: tf.keras.Model, train_data: List[Tuple[int, int, int]], test_data: List[Tuple[int, int, int]],
           topk_data: TopkData, ripple_set: Dict[int, List[Tuple[List[int], List[int], List[int]]]],
           optimizer=None, epochs=100, batch=512):
@@ -55,7 +57,6 @@ def train(model: tf.keras.Model, train_data: List[Tuple[int, int, int]], test_da
     loss_object = tf.keras.losses.BinaryCrossentropy()
     score_fn = _get_score_fn(model, ripple_set)
 
-    #@tf.function
     def train_model():
         def reset_metrics():
             for metric in [loss_mean_metric, auc_metric, precision_metric, recall_metric, kge_loss_mean_metric]:
@@ -107,7 +108,4 @@ def train(model: tf.keras.Model, train_data: List[Tuple[int, int, int]], test_da
 
             print('epoch_time=', time.time() - epoch_start_time, 's', sep='')
 
-    print('开始训练：epochs=', epochs, ', batch=', batch, sep='')
-    start_time = time.time()
     train_model()
-    print('（耗时', time.time() - start_time, '秒）', sep='')

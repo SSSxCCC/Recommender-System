@@ -1,0 +1,593 @@
+Python 3.7.5 (tags/v3.7.5:5c02a39a0b, Oct 15 2019, 00:11:34) [MSC v.1916 64 bit (AMD64)] on win32
+runfile('D:/work/python/PycharmProjects/tftest/Recommender_System/algorithm/KGNNLS/main.py', wdir='D:/work/python/PycharmProjects/tftest/Recommender_System/algorithm/KGNNLS')
+2019-12-23 19:35:57.947075: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library cudart64_101.dll
+2019-12-23 19:35:59.930507: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library nvcuda.dll
+2019-12-23 19:36:00.008281: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1555] Found device 0 with properties:
+pciBusID: 0000:01:00.0 name: GeForce RTX 2080 computeCapability: 7.5
+coreClock: 1.8GHz coreCount: 46 deviceMemorySize: 8.00GiB deviceMemoryBandwidth: 417.23GiB/s
+2019-12-23 19:36:00.008639: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library cudart64_101.dll
+2019-12-23 19:36:00.018277: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library cublas64_10.dll
+2019-12-23 19:36:00.042015: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library cufft64_10.dll
+2019-12-23 19:36:00.044324: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library curand64_10.dll
+2019-12-23 19:36:00.052946: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library cusolver64_10.dll
+2019-12-23 19:36:00.057492: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library cusparse64_10.dll
+2019-12-23 19:36:00.113088: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library cudnn64_7.dll
+2019-12-23 19:36:00.113635: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1697] Adding visible gpu devices: 0
+2019-12-23 19:36:00.142422: I tensorflow/core/platform/cpu_feature_guard.cc:142] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2
+2019-12-23 19:36:00.145808: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1555] Found device 0 with properties:
+pciBusID: 0000:01:00.0 name: GeForce RTX 2080 computeCapability: 7.5
+coreClock: 1.8GHz coreCount: 46 deviceMemorySize: 8.00GiB deviceMemoryBandwidth: 417.23GiB/s
+2019-12-23 19:36:00.146179: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library cudart64_101.dll
+2019-12-23 19:36:00.146352: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library cublas64_10.dll
+2019-12-23 19:36:00.146567: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library cufft64_10.dll
+2019-12-23 19:36:00.146768: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library curand64_10.dll
+2019-12-23 19:36:00.147013: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library cusolver64_10.dll
+2019-12-23 19:36:00.147229: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library cusparse64_10.dll
+2019-12-23 19:36:00.147473: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library cudnn64_7.dll
+2019-12-23 19:36:00.148007: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1697] Adding visible gpu devices: 0
+2019-12-23 19:36:00.780227: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1096] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-12-23 19:36:00.780426: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1102]      0
+2019-12-23 19:36:00.780568: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] 0:   N
+2019-12-23 19:36:00.781520: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1241] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 6269 MB memory) -> physical GPU (device: 0, name: GeForce RTX 2080, pci bus id: 0000:01:00.0, compute capability: 7.5)
+开始读kg_ml1m&RippleNet\item_id2entity_id.txt
+（耗时0.0秒）
+开始读数据ml1m。共1000209条数据，有6040个用户，3706个电影。
+（耗时1.2820632457733154秒）
+开始采集负样本，负正样本比例为1，权重阈值为4，方法为random。
+（耗时4.017590522766113秒）
+开始进行id规整化。
+（耗时0.23546648025512695秒）
+开始读kg_ml1m&RippleNet\kg.txt
+（耗时1.7040431499481201秒）
+开始数据切分，test_ratio=0.4, shuffle=True
+（耗时0.424074649810791秒）
+开始准备topk评估数据，n_sample_user=100
+（耗时1.5443220138549805秒）
+初始化KGNNLS模型：n_user=6036, n_entity=182011, n_relation=12, dim=16, iter_size=1, neighbor_size=4, l2=1e-07
+开始训练：epochs=10, batch=512
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+2019-12-23 19:36:21.794613: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library cublas64_10.dll
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+epoch=1, train_loss=1.57950, train_auc=0.85386, train_f1=0.76888, test_loss=1.51849, test_auc=0.89385, test_f1=0.81966
+[k=10, precision=19.500%, recall=9.312%, f1=12.605%][k=36, precision=13.167%, recall=22.636%, f1=16.649%][k=100, precision=8.650%, recall=41.309%, f1=14.305%]
+epoch_time=27.119590759277344s
+epoch=2, train_loss=1.48791, train_auc=0.90920, train_f1=0.83515, test_loss=1.49538, test_auc=0.90692, test_f1=0.83298
+[k=10, precision=20.100%, recall=9.599%, f1=12.993%][k=36, precision=14.222%, recall=24.451%, f1=17.984%][k=100, precision=9.210%, recall=43.983%, f1=15.231%]
+epoch_time=22.78330111503601s
+epoch=3, train_loss=1.44416, train_auc=0.93042, train_f1=0.85767, test_loss=1.48876, test_auc=0.91333, test_f1=0.84167
+[k=10, precision=21.500%, recall=10.267%, f1=13.898%][k=36, precision=14.972%, recall=25.740%, f1=18.932%][k=100, precision=9.630%, recall=45.989%, f1=15.925%]
+epoch_time=22.84014081954956s
+epoch=4, train_loss=1.41238, train_auc=0.94395, train_f1=0.87326, test_loss=1.49599, test_auc=0.91303, test_f1=0.84053
+[k=10, precision=20.500%, recall=9.790%, f1=13.251%][k=36, precision=14.778%, recall=25.406%, f1=18.686%][k=100, precision=9.450%, recall=45.129%, f1=15.628%]
+epoch_time=28.57365393638611s
+epoch=5, train_loss=1.38970, train_auc=0.95277, train_f1=0.88480, test_loss=1.50671, test_auc=0.91042, test_f1=0.83727
+[k=10, precision=21.200%, recall=10.124%, f1=13.704%][k=36, precision=14.417%, recall=24.785%, f1=18.230%][k=100, precision=9.210%, recall=43.983%, f1=15.231%]
+epoch_time=28.26016592979431s
+epoch=6, train_loss=1.37432, train_auc=0.95844, train_f1=0.89241, test_loss=1.51989, test_auc=0.90872, test_f1=0.83616
+[k=10, precision=20.100%, recall=9.599%, f1=12.993%][k=36, precision=14.139%, recall=24.308%, f1=17.878%][k=100, precision=8.980%, recall=42.884%, f1=14.850%]
+epoch_time=29.437583208084106s
+epoch=7, train_loss=1.36300, train_auc=0.96238, train_f1=0.89778, test_loss=1.53060, test_auc=0.90696, test_f1=0.83242
+[k=10, precision=20.000%, recall=9.551%, f1=12.928%][k=36, precision=13.583%, recall=23.352%, f1=17.176%][k=100, precision=8.960%, recall=42.789%, f1=14.817%]
+epoch_time=30.097235441207886s
+epoch=8, train_loss=1.35474, train_auc=0.96522, train_f1=0.90198, test_loss=1.54241, test_auc=0.90484, test_f1=0.83084
+[k=10, precision=20.100%, recall=9.599%, f1=12.993%][k=36, precision=13.361%, recall=22.970%, f1=16.895%][k=100, precision=8.760%, recall=41.834%, f1=14.487%]
+epoch_time=31.676785469055176s
+epoch=9, train_loss=1.34787, train_auc=0.96753, train_f1=0.90545, test_loss=1.55432, test_auc=0.90407, test_f1=0.83050
+[k=10, precision=19.200%, recall=9.169%, f1=12.411%][k=36, precision=13.167%, recall=22.636%, f1=16.649%][k=100, precision=8.700%, recall=41.547%, f1=14.387%]
+epoch_time=28.48921513557434s
+epoch=10, train_loss=1.34263, train_auc=0.96928, train_f1=0.90805, test_loss=1.56287, test_auc=0.90300, test_f1=0.82945
+[k=10, precision=19.800%, recall=9.456%, f1=12.799%][k=36, precision=13.417%, recall=23.066%, f1=16.965%][k=100, precision=8.760%, recall=41.834%, f1=14.487%]
+epoch_time=30.705060720443726s
+（耗时280.06564831733704秒）
+初始化KGCN模型：n_user=6036, n_entity=182011, n_relation=12, dim=16, iter_size=1, neighbor_size=4, l2=1e-07
+开始训练：epochs=10, batch=512
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+epoch=1, train_loss=0.47637, train_auc=0.85194, train_f1=0.76632, test_loss=0.41388, test_auc=0.89252, test_f1=0.81697
+[k=10, precision=18.000%, recall=8.596%, f1=11.635%][k=36, precision=13.028%, recall=22.397%, f1=16.473%][k=100, precision=8.630%, recall=41.213%, f1=14.272%]
+epoch_time=35.813058614730835s
+epoch=2, train_loss=0.38296, train_auc=0.90899, train_f1=0.83486, test_loss=0.38921, test_auc=0.90741, test_f1=0.83439
+[k=10, precision=20.700%, recall=9.885%, f1=13.381%][k=36, precision=14.194%, recall=24.403%, f1=17.949%][k=100, precision=9.240%, recall=44.126%, f1=15.280%]
+epoch_time=27.864168643951416s
+epoch=3, train_loss=0.33864, train_auc=0.93041, train_f1=0.85794, test_loss=0.38350, test_auc=0.91103, test_f1=0.83770
+[k=10, precision=21.400%, recall=10.220%, f1=13.833%][k=36, precision=14.250%, recall=24.499%, f1=18.019%][k=100, precision=9.210%, recall=43.983%, f1=15.231%]
+epoch_time=29.705379247665405s
+epoch=4, train_loss=0.30607, train_auc=0.94425, train_f1=0.87383, test_loss=0.38890, test_auc=0.91166, test_f1=0.83906
+[k=10, precision=20.100%, recall=9.599%, f1=12.993%][k=36, precision=14.583%, recall=25.072%, f1=18.440%][k=100, precision=9.190%, recall=43.887%, f1=15.198%]
+epoch_time=29.478132963180542s
+epoch=5, train_loss=0.28405, train_auc=0.95283, train_f1=0.88421, test_loss=0.40172, test_auc=0.90889, test_f1=0.83564
+[k=10, precision=19.300%, recall=9.217%, f1=12.476%][k=36, precision=13.722%, recall=23.591%, f1=17.352%][k=100, precision=9.210%, recall=43.983%, f1=15.231%]
+epoch_time=27.180973291397095s
+epoch=6, train_loss=0.26854, train_auc=0.95845, train_f1=0.89214, test_loss=0.41375, test_auc=0.90756, test_f1=0.83439
+[k=10, precision=20.100%, recall=9.599%, f1=12.993%][k=36, precision=14.056%, recall=24.164%, f1=17.773%][k=100, precision=9.250%, recall=44.174%, f1=15.297%]
+epoch_time=27.66135048866272s
+epoch=7, train_loss=0.25740, train_auc=0.96237, train_f1=0.89739, test_loss=0.42575, test_auc=0.90555, test_f1=0.83114
+[k=10, precision=18.900%, recall=9.026%, f1=12.217%][k=36, precision=13.556%, recall=23.305%, f1=17.141%][k=100, precision=9.030%, recall=43.123%, f1=14.933%]
+epoch_time=27.490990161895752s
+epoch=8, train_loss=0.24898, train_auc=0.96521, train_f1=0.90161, test_loss=0.43589, test_auc=0.90553, test_f1=0.83223
+[k=10, precision=20.100%, recall=9.599%, f1=12.993%][k=36, precision=13.583%, recall=23.352%, f1=17.176%][k=100, precision=9.010%, recall=43.028%, f1=14.900%]
+epoch_time=27.92411160469055s
+epoch=9, train_loss=0.24269, train_auc=0.96734, train_f1=0.90500, test_loss=0.44705, test_auc=0.90362, test_f1=0.83009
+[k=10, precision=19.300%, recall=9.217%, f1=12.476%][k=36, precision=13.722%, recall=23.591%, f1=17.352%][k=100, precision=9.090%, recall=43.410%, f1=15.032%]
+epoch_time=27.51790761947632s
+epoch=10, train_loss=0.23765, train_auc=0.96907, train_f1=0.90809, test_loss=0.45637, test_auc=0.90201, test_f1=0.82978
+[k=10, precision=18.300%, recall=8.739%, f1=11.829%][k=36, precision=13.278%, recall=22.827%, f1=16.790%][k=100, precision=9.050%, recall=43.219%, f1=14.966%]
+epoch_time=27.858093976974487s
+（耗时288.55665040016174秒）
+初始化KGNNLS模型：n_user=6036, n_entity=182011, n_relation=12, dim=16, iter_size=1, neighbor_size=6, l2=1e-07
+开始训练：epochs=10, batch=512
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+epoch=1, train_loss=1.76493, train_auc=0.84897, train_f1=0.76264, test_loss=1.70641, test_auc=0.88958, test_f1=0.81671
+[k=10, precision=19.100%, recall=9.121%, f1=12.346%][k=36, precision=13.139%, recall=22.588%, f1=16.614%][k=100, precision=8.650%, recall=41.309%, f1=14.305%]
+epoch_time=34.976561069488525s
+epoch=2, train_loss=1.66930, train_auc=0.90819, train_f1=0.83464, test_loss=1.67408, test_auc=0.90764, test_f1=0.83574
+[k=10, precision=21.500%, recall=10.267%, f1=13.898%][k=36, precision=14.333%, recall=24.642%, f1=18.124%][k=100, precision=9.510%, recall=45.415%, f1=15.727%]
+epoch_time=28.828460454940796s
+epoch=3, train_loss=1.62348, train_auc=0.93038, train_f1=0.85800, test_loss=1.66891, test_auc=0.91248, test_f1=0.84137
+[k=10, precision=20.500%, recall=9.790%, f1=13.251%][k=36, precision=14.667%, recall=25.215%, f1=18.546%][k=100, precision=9.490%, recall=45.320%, f1=15.694%]
+epoch_time=29.16231656074524s
+epoch=4, train_loss=1.59064, train_auc=0.94434, train_f1=0.87396, test_loss=1.67575, test_auc=0.91228, test_f1=0.83846
+[k=10, precision=21.500%, recall=10.267%, f1=13.898%][k=36, precision=14.611%, recall=25.119%, f1=18.476%][k=100, precision=9.550%, recall=45.606%, f1=15.793%]
+epoch_time=31.243387699127197s
+epoch=5, train_loss=1.56726, train_auc=0.95333, train_f1=0.88570, test_loss=1.68620, test_auc=0.91127, test_f1=0.83718
+[k=10, precision=21.600%, recall=10.315%, f1=13.963%][k=36, precision=14.194%, recall=24.403%, f1=17.949%][k=100, precision=9.620%, recall=45.941%, f1=15.909%]
+epoch_time=30.595072507858276s
+epoch=6, train_loss=1.55164, train_auc=0.95900, train_f1=0.89363, test_loss=1.69734, test_auc=0.90942, test_f1=0.83603
+[k=10, precision=20.800%, recall=9.933%, f1=13.445%][k=36, precision=14.472%, recall=24.881%, f1=18.300%][k=100, precision=9.490%, recall=45.320%, f1=15.694%]
+epoch_time=31.362515687942505s
+epoch=7, train_loss=1.54047, train_auc=0.96279, train_f1=0.89918, test_loss=1.71134, test_auc=0.90863, test_f1=0.83655
+[k=10, precision=19.500%, recall=9.312%, f1=12.605%][k=36, precision=14.417%, recall=24.785%, f1=18.230%][k=100, precision=9.300%, recall=44.413%, f1=15.380%]
+epoch_time=30.041810512542725s
+epoch=8, train_loss=1.53204, train_auc=0.96572, train_f1=0.90313, test_loss=1.72230, test_auc=0.90582, test_f1=0.83055
+[k=10, precision=19.500%, recall=9.312%, f1=12.605%][k=36, precision=14.111%, recall=24.260%, f1=17.843%][k=100, precision=9.220%, recall=44.031%, f1=15.247%]
+epoch_time=29.414794921875s
+epoch=9, train_loss=1.52561, train_auc=0.96787, train_f1=0.90627, test_loss=1.73169, test_auc=0.90396, test_f1=0.83004
+[k=10, precision=19.800%, recall=9.456%, f1=12.799%][k=36, precision=14.111%, recall=24.260%, f1=17.843%][k=100, precision=9.310%, recall=44.460%, f1=15.396%]
+epoch_time=23.198901653289795s
+epoch=10, train_loss=1.52024, train_auc=0.96965, train_f1=0.90915, test_loss=1.74265, test_auc=0.90304, test_f1=0.83027
+[k=10, precision=18.300%, recall=8.739%, f1=11.829%][k=36, precision=14.083%, recall=24.212%, f1=17.808%][k=100, precision=9.180%, recall=43.840%, f1=15.181%]
+epoch_time=23.135934352874756s
+（耗时292.0378623008728秒）
+初始化KGCN模型：n_user=6036, n_entity=182011, n_relation=12, dim=16, iter_size=1, neighbor_size=6, l2=1e-07
+开始训练：epochs=10, batch=512
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+epoch=1, train_loss=0.47702, train_auc=0.85142, train_f1=0.76684, test_loss=0.42021, test_auc=0.88898, test_f1=0.81366
+[k=10, precision=18.900%, recall=9.026%, f1=12.217%][k=36, precision=13.028%, recall=22.397%, f1=16.473%][k=100, precision=8.530%, recall=40.735%, f1=14.106%]
+epoch_time=27.60375165939331s
+epoch=2, train_loss=0.38709, train_auc=0.90670, train_f1=0.83201, test_loss=0.38844, test_auc=0.90650, test_f1=0.83402
+[k=10, precision=19.200%, recall=9.169%, f1=12.411%][k=36, precision=13.528%, recall=23.257%, f1=17.106%][k=100, precision=8.910%, recall=42.550%, f1=14.735%]
+epoch_time=22.86432933807373s
+epoch=3, train_loss=0.33979, train_auc=0.92983, train_f1=0.85714, test_loss=0.38312, test_auc=0.91068, test_f1=0.83862
+[k=10, precision=21.800%, recall=10.411%, f1=14.092%][k=36, precision=14.250%, recall=24.499%, f1=18.019%][k=100, precision=9.290%, recall=44.365%, f1=15.363%]
+epoch_time=23.251120567321777s
+epoch=4, train_loss=0.30604, train_auc=0.94424, train_f1=0.87390, test_loss=0.39063, test_auc=0.91041, test_f1=0.83666
+[k=10, precision=22.300%, recall=10.649%, f1=14.415%][k=36, precision=14.889%, recall=25.597%, f1=18.827%][k=100, precision=9.520%, recall=45.463%, f1=15.743%]
+epoch_time=23.10181951522827s
+epoch=5, train_loss=0.28347, train_auc=0.95290, train_f1=0.88515, test_loss=0.40198, test_auc=0.90956, test_f1=0.83543
+[k=10, precision=21.600%, recall=10.315%, f1=13.963%][k=36, precision=14.778%, recall=25.406%, f1=18.686%][k=100, precision=9.590%, recall=45.798%, f1=15.859%]
+epoch_time=24.042283058166504s
+epoch=6, train_loss=0.26793, train_auc=0.95853, train_f1=0.89277, test_loss=0.41375, test_auc=0.90837, test_f1=0.83486
+[k=10, precision=20.100%, recall=9.599%, f1=12.993%][k=36, precision=14.611%, recall=25.119%, f1=18.476%][k=100, precision=9.380%, recall=44.795%, f1=15.512%]
+epoch_time=25.298330545425415s
+epoch=7, train_loss=0.25685, train_auc=0.96239, train_f1=0.89836, test_loss=0.42510, test_auc=0.90508, test_f1=0.83116
+[k=10, precision=19.600%, recall=9.360%, f1=12.670%][k=36, precision=14.194%, recall=24.403%, f1=17.949%][k=100, precision=9.200%, recall=43.935%, f1=15.214%]
+epoch_time=28.84117889404297s
+epoch=8, train_loss=0.24815, train_auc=0.96536, train_f1=0.90272, test_loss=0.43543, test_auc=0.90432, test_f1=0.82915
+[k=10, precision=19.900%, recall=9.503%, f1=12.864%][k=36, precision=14.667%, recall=25.215%, f1=18.546%][k=100, precision=9.110%, recall=43.505%, f1=15.065%]
+epoch_time=28.178372621536255s
+epoch=9, train_loss=0.24171, train_auc=0.96753, train_f1=0.90547, test_loss=0.44822, test_auc=0.90437, test_f1=0.83126
+[k=10, precision=19.000%, recall=9.074%, f1=12.282%][k=36, precision=14.333%, recall=24.642%, f1=18.124%][k=100, precision=9.370%, recall=44.747%, f1=15.495%]
+epoch_time=29.751657485961914s
+epoch=10, train_loss=0.23630, train_auc=0.96933, train_f1=0.90877, test_loss=0.45731, test_auc=0.90237, test_f1=0.82927
+[k=10, precision=19.000%, recall=9.074%, f1=12.282%][k=36, precision=13.694%, recall=23.543%, f1=17.316%][k=100, precision=9.220%, recall=44.031%, f1=15.247%]
+epoch_time=33.46091413497925s
+（耗时266.44162583351135秒）
+初始化KGNNLS模型：n_user=6036, n_entity=182011, n_relation=12, dim=16, iter_size=1, neighbor_size=8, l2=1e-07
+开始训练：epochs=10, batch=512
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+epoch=1, train_loss=1.89534, train_auc=0.85075, train_f1=0.76494, test_loss=1.83434, test_auc=0.89215, test_f1=0.82074
+[k=10, precision=19.200%, recall=9.169%, f1=12.411%][k=36, precision=12.639%, recall=21.729%, f1=15.982%][k=100, precision=8.670%, recall=41.404%, f1=14.338%]
+epoch_time=40.64080238342285s
+epoch=2, train_loss=1.79985, train_auc=0.90920, train_f1=0.83498, test_loss=1.80751, test_auc=0.90742, test_f1=0.83385
+[k=10, precision=20.900%, recall=9.981%, f1=13.510%][k=36, precision=14.278%, recall=24.546%, f1=18.054%][k=100, precision=9.260%, recall=44.222%, f1=15.313%]
+epoch_time=32.826770305633545s
+epoch=3, train_loss=1.75757, train_auc=0.92965, train_f1=0.85706, test_loss=1.80449, test_auc=0.91032, test_f1=0.83558
+[k=10, precision=20.100%, recall=9.599%, f1=12.993%][k=36, precision=14.278%, recall=24.546%, f1=18.054%][k=100, precision=9.380%, recall=44.795%, f1=15.512%]
+epoch_time=33.18496918678284s
+epoch=4, train_loss=1.72675, train_auc=0.94286, train_f1=0.87238, test_loss=1.81177, test_auc=0.91068, test_f1=0.83659
+[k=10, precision=20.100%, recall=9.599%, f1=12.993%][k=36, precision=14.250%, recall=24.499%, f1=18.019%][k=100, precision=9.610%, recall=45.893%, f1=15.892%]
+epoch_time=30.79245948791504s
+epoch=5, train_loss=1.70435, train_auc=0.95159, train_f1=0.88295, test_loss=1.82286, test_auc=0.90833, test_f1=0.83470
+[k=10, precision=20.000%, recall=9.551%, f1=12.928%][k=36, precision=14.306%, recall=24.594%, f1=18.089%][k=100, precision=9.440%, recall=45.081%, f1=15.611%]
+epoch_time=33.168721199035645s
+epoch=6, train_loss=1.68814, train_auc=0.95759, train_f1=0.89115, test_loss=1.83516, test_auc=0.90763, test_f1=0.83472
+[k=10, precision=19.000%, recall=9.074%, f1=12.282%][k=36, precision=14.167%, recall=24.355%, f1=17.914%][k=100, precision=9.250%, recall=44.174%, f1=15.297%]
+epoch_time=36.551615476608276s
+epoch=7, train_loss=1.67635, train_auc=0.96172, train_f1=0.89703, test_loss=1.84765, test_auc=0.90367, test_f1=0.82961
+[k=10, precision=18.500%, recall=8.835%, f1=11.959%][k=36, precision=13.361%, recall=22.970%, f1=16.895%][k=100, precision=9.000%, recall=42.980%, f1=14.883%]
+epoch_time=28.214032411575317s
+epoch=8, train_loss=1.66787, train_auc=0.96465, train_f1=0.90114, test_loss=1.85877, test_auc=0.90216, test_f1=0.82717
+[k=10, precision=19.000%, recall=9.074%, f1=12.282%][k=36, precision=13.306%, recall=22.875%, f1=16.825%][k=100, precision=9.170%, recall=43.792%, f1=15.165%]
+epoch_time=32.40636205673218s
+epoch=9, train_loss=1.66149, train_auc=0.96679, train_f1=0.90465, test_loss=1.86770, test_auc=0.90287, test_f1=0.82921
+[k=10, precision=19.500%, recall=9.312%, f1=12.605%][k=36, precision=13.250%, recall=22.779%, f1=16.754%][k=100, precision=9.140%, recall=43.649%, f1=15.115%]
+epoch_time=30.12307047843933s
+epoch=10, train_loss=1.65643, train_auc=0.96847, train_f1=0.90703, test_loss=1.87771, test_auc=0.90104, test_f1=0.82634
+[k=10, precision=19.400%, recall=9.265%, f1=12.540%][k=36, precision=13.417%, recall=23.066%, f1=16.965%][k=100, precision=8.970%, recall=42.837%, f1=14.834%]
+epoch_time=31.751322031021118s
+（耗时329.73823165893555秒）
+初始化KGCN模型：n_user=6036, n_entity=182011, n_relation=12, dim=16, iter_size=1, neighbor_size=8, l2=1e-07
+开始训练：epochs=10, batch=512
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+epoch=1, train_loss=0.47615, train_auc=0.85219, train_f1=0.76843, test_loss=0.42500, test_auc=0.88592, test_f1=0.81489
+[k=10, precision=18.800%, recall=8.978%, f1=12.153%][k=36, precision=13.194%, recall=22.684%, f1=16.684%][k=100, precision=8.310%, recall=39.685%, f1=13.742%]
+epoch_time=36.35740685462952s
+epoch=2, train_loss=0.39159, train_auc=0.90446, train_f1=0.83040, test_loss=0.39196, test_auc=0.90488, test_f1=0.83272
+[k=10, precision=20.100%, recall=9.599%, f1=12.993%][k=36, precision=13.694%, recall=23.543%, f1=17.316%][k=100, precision=9.150%, recall=43.696%, f1=15.131%]
+epoch_time=29.025227308273315s
+epoch=3, train_loss=0.34033, train_auc=0.92963, train_f1=0.85749, test_loss=0.38113, test_auc=0.91253, test_f1=0.84064
+[k=10, precision=22.000%, recall=10.506%, f1=14.221%][k=36, precision=14.528%, recall=24.976%, f1=18.370%][k=100, precision=9.450%, recall=45.129%, f1=15.628%]
+epoch_time=29.731571674346924s
+epoch=4, train_loss=0.30400, train_auc=0.94496, train_f1=0.87508, test_loss=0.38673, test_auc=0.91266, test_f1=0.83864
+[k=10, precision=20.000%, recall=9.551%, f1=12.928%][k=36, precision=14.389%, recall=24.737%, f1=18.195%][k=100, precision=9.360%, recall=44.699%, f1=15.479%]
+epoch_time=28.75709104537964s
+epoch=5, train_loss=0.28072, train_auc=0.95386, train_f1=0.88621, test_loss=0.39515, test_auc=0.91202, test_f1=0.83887
+[k=10, precision=19.700%, recall=9.408%, f1=12.734%][k=36, precision=13.778%, recall=23.687%, f1=17.422%][k=100, precision=9.270%, recall=44.269%, f1=15.330%]
+epoch_time=29.775969982147217s
+epoch=6, train_loss=0.26544, train_auc=0.95931, train_f1=0.89389, test_loss=0.40690, test_auc=0.91017, test_f1=0.83666
+[k=10, precision=19.400%, recall=9.265%, f1=12.540%][k=36, precision=14.417%, recall=24.785%, f1=18.230%][k=100, precision=9.300%, recall=44.413%, f1=15.380%]
+epoch_time=28.72454857826233s
+epoch=7, train_loss=0.25407, train_auc=0.96323, train_f1=0.89907, test_loss=0.41732, test_auc=0.90896, test_f1=0.83591
+[k=10, precision=17.900%, recall=8.548%, f1=11.571%][k=36, precision=13.889%, recall=23.878%, f1=17.562%][k=100, precision=9.020%, recall=43.075%, f1=14.916%]
+epoch_time=29.516916036605835s
+epoch=8, train_loss=0.24625, train_auc=0.96588, train_f1=0.90332, test_loss=0.42865, test_auc=0.90790, test_f1=0.83561
+[k=10, precision=17.400%, recall=8.309%, f1=11.248%][k=36, precision=13.944%, recall=23.973%, f1=17.633%][k=100, precision=9.220%, recall=44.031%, f1=15.247%]
+epoch_time=28.72490692138672s
+epoch=9, train_loss=0.23962, train_auc=0.96810, train_f1=0.90664, test_loss=0.43861, test_auc=0.90577, test_f1=0.83248
+[k=10, precision=18.000%, recall=8.596%, f1=11.635%][k=36, precision=13.361%, recall=22.970%, f1=16.895%][k=100, precision=8.990%, recall=42.932%, f1=14.867%]
+epoch_time=29.48210906982422s
+epoch=10, train_loss=0.23480, train_auc=0.96971, train_f1=0.90920, test_loss=0.44942, test_auc=0.90465, test_f1=0.83246
+[k=10, precision=17.800%, recall=8.500%, f1=11.506%][k=36, precision=13.306%, recall=22.875%, f1=16.825%][k=100, precision=8.890%, recall=42.455%, f1=14.702%]
+epoch_time=24.574650526046753s
+（耗时294.7328805923462秒）
+初始化KGNNLS模型：n_user=6036, n_entity=182011, n_relation=12, dim=16, iter_size=1, neighbor_size=10, l2=1e-07
+开始训练：epochs=10, batch=512
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+epoch=1, train_loss=2.00024, train_auc=0.85052, train_f1=0.76564, test_loss=1.94069, test_auc=0.89176, test_f1=0.81996
+[k=10, precision=18.600%, recall=8.883%, f1=12.023%][k=36, precision=13.000%, recall=22.350%, f1=16.438%][k=100, precision=8.590%, recall=41.022%, f1=14.205%]
+epoch_time=31.0454318523407s
+epoch=2, train_loss=1.90269, train_auc=0.91013, train_f1=0.83653, test_loss=1.90811, test_auc=0.90959, test_f1=0.83889
+[k=10, precision=21.800%, recall=10.411%, f1=14.092%][k=36, precision=13.833%, recall=23.782%, f1=17.492%][k=100, precision=9.430%, recall=45.033%, f1=15.595%]
+epoch_time=24.21400022506714s
+epoch=3, train_loss=1.85898, train_auc=0.93108, train_f1=0.85852, test_loss=1.90344, test_auc=0.91327, test_f1=0.83860
+[k=10, precision=22.000%, recall=10.506%, f1=14.221%][k=36, precision=14.833%, recall=25.501%, f1=18.757%][k=100, precision=9.500%, recall=45.368%, f1=15.710%]
+epoch_time=24.133469104766846s
+epoch=4, train_loss=1.82940, train_auc=0.94360, train_f1=0.87295, test_loss=1.91110, test_auc=0.91290, test_f1=0.83962
+[k=10, precision=19.700%, recall=9.408%, f1=12.734%][k=36, precision=14.528%, recall=24.976%, f1=18.370%][k=100, precision=9.370%, recall=44.747%, f1=15.495%]
+epoch_time=24.877651691436768s
+epoch=5, train_loss=1.80881, train_auc=0.95163, train_f1=0.88322, test_loss=1.92096, test_auc=0.91068, test_f1=0.83551
+[k=10, precision=19.300%, recall=9.217%, f1=12.476%][k=36, precision=14.056%, recall=24.164%, f1=17.773%][k=100, precision=9.380%, recall=44.795%, f1=15.512%]
+epoch_time=24.204477310180664s
+epoch=6, train_loss=1.79342, train_auc=0.95731, train_f1=0.89048, test_loss=1.93314, test_auc=0.90938, test_f1=0.83672
+[k=10, precision=18.700%, recall=8.930%, f1=12.088%][k=36, precision=14.500%, recall=24.928%, f1=18.335%][k=100, precision=9.360%, recall=44.699%, f1=15.479%]
+epoch_time=24.19841170310974s
+epoch=7, train_loss=1.78197, train_auc=0.96139, train_f1=0.89668, test_loss=1.94465, test_auc=0.90881, test_f1=0.83638
+[k=10, precision=18.700%, recall=8.930%, f1=12.088%][k=36, precision=14.472%, recall=24.881%, f1=18.300%][k=100, precision=9.180%, recall=43.840%, f1=15.181%]
+epoch_time=24.158955097198486s
+epoch=8, train_loss=1.77292, train_auc=0.96450, train_f1=0.90076, test_loss=1.95819, test_auc=0.90381, test_f1=0.82942
+[k=10, precision=17.800%, recall=8.500%, f1=11.506%][k=36, precision=14.000%, recall=24.069%, f1=17.703%][k=100, precision=9.120%, recall=43.553%, f1=15.082%]
+epoch_time=24.25460982322693s
+epoch=9, train_loss=1.76602, train_auc=0.96678, train_f1=0.90452, test_loss=1.96778, test_auc=0.90337, test_f1=0.83044
+[k=10, precision=18.700%, recall=8.930%, f1=12.088%][k=36, precision=13.722%, recall=23.591%, f1=17.352%][k=100, precision=9.160%, recall=43.744%, f1=15.148%]
+epoch_time=24.202542304992676s
+epoch=10, train_loss=1.76041, train_auc=0.96870, train_f1=0.90696, test_loss=1.97533, test_auc=0.90320, test_f1=0.82938
+[k=10, precision=17.700%, recall=8.453%, f1=11.441%][k=36, precision=13.778%, recall=23.687%, f1=17.422%][k=100, precision=8.940%, recall=42.693%, f1=14.784%]
+epoch_time=24.191513061523438s
+（耗时249.55914306640625秒）
+初始化KGCN模型：n_user=6036, n_entity=182011, n_relation=12, dim=16, iter_size=1, neighbor_size=10, l2=1e-07
+开始训练：epochs=10, batch=512
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+epoch=1, train_loss=0.47636, train_auc=0.85189, train_f1=0.76671, test_loss=0.41416, test_auc=0.89206, test_f1=0.81871
+[k=10, precision=18.500%, recall=8.835%, f1=11.959%][k=36, precision=13.056%, recall=22.445%, f1=16.509%][k=100, precision=8.550%, recall=40.831%, f1=14.139%]
+epoch_time=29.99992036819458s
+epoch=2, train_loss=0.38524, train_auc=0.90750, train_f1=0.83372, test_loss=0.39183, test_auc=0.90499, test_f1=0.83258
+[k=10, precision=20.800%, recall=9.933%, f1=13.445%][k=36, precision=14.361%, recall=24.690%, f1=18.159%][k=100, precision=9.070%, recall=43.314%, f1=14.999%]
+epoch_time=23.926955938339233s
+epoch=3, train_loss=0.34093, train_auc=0.92919, train_f1=0.85600, test_loss=0.38375, test_auc=0.91107, test_f1=0.83655
+[k=10, precision=20.600%, recall=9.838%, f1=13.316%][k=36, precision=14.667%, recall=25.215%, f1=18.546%][k=100, precision=9.340%, recall=44.604%, f1=15.446%]
+epoch_time=24.04931116104126s
+epoch=4, train_loss=0.30687, train_auc=0.94375, train_f1=0.87327, test_loss=0.39212, test_auc=0.91025, test_f1=0.83687
+[k=10, precision=20.100%, recall=9.599%, f1=12.993%][k=36, precision=14.222%, recall=24.451%, f1=17.984%][k=100, precision=9.230%, recall=44.078%, f1=15.264%]
+epoch_time=24.045140027999878s
+epoch=5, train_loss=0.28441, train_auc=0.95247, train_f1=0.88455, test_loss=0.40238, test_auc=0.90932, test_f1=0.83668
+[k=10, precision=20.300%, recall=9.694%, f1=13.122%][k=36, precision=13.917%, recall=23.926%, f1=17.597%][k=100, precision=9.230%, recall=44.078%, f1=15.264%]
+epoch_time=23.76905131340027s
+epoch=6, train_loss=0.26840, train_auc=0.95830, train_f1=0.89221, test_loss=0.41230, test_auc=0.90664, test_f1=0.83087
+[k=10, precision=20.500%, recall=9.790%, f1=13.251%][k=36, precision=13.611%, recall=23.400%, f1=17.211%][k=100, precision=9.130%, recall=43.601%, f1=15.098%]
+epoch_time=24.124775886535645s
+epoch=7, train_loss=0.25678, train_auc=0.96234, train_f1=0.89831, test_loss=0.42711, test_auc=0.90683, test_f1=0.83249
+[k=10, precision=20.000%, recall=9.551%, f1=12.928%][k=36, precision=13.917%, recall=23.926%, f1=17.597%][k=100, precision=9.000%, recall=42.980%, f1=14.883%]
+epoch_time=23.72412919998169s
+epoch=8, train_loss=0.24841, train_auc=0.96521, train_f1=0.90215, test_loss=0.43793, test_auc=0.90358, test_f1=0.82954
+[k=10, precision=19.700%, recall=9.408%, f1=12.734%][k=36, precision=13.333%, recall=22.923%, f1=16.860%][k=100, precision=9.020%, recall=43.075%, f1=14.916%]
+epoch_time=23.999567985534668s
+epoch=9, train_loss=0.24198, train_auc=0.96739, train_f1=0.90565, test_loss=0.44758, test_auc=0.90318, test_f1=0.82986
+[k=10, precision=20.100%, recall=9.599%, f1=12.993%][k=36, precision=14.139%, recall=24.308%, f1=17.878%][k=100, precision=8.830%, recall=42.168%, f1=14.602%]
+epoch_time=23.85265874862671s
+epoch=10, train_loss=0.23708, train_auc=0.96905, train_f1=0.90840, test_loss=0.45825, test_auc=0.90089, test_f1=0.82718
+[k=10, precision=18.700%, recall=8.930%, f1=12.088%][k=36, precision=13.111%, recall=22.541%, f1=16.579%][k=100, precision=8.710%, recall=41.595%, f1=14.404%]
+epoch_time=24.28455352783203s
+（耗时245.85523557662964秒）
+初始化KGNNLS模型：n_user=6036, n_entity=182011, n_relation=12, dim=16, iter_size=1, neighbor_size=12, l2=1e-07
+开始训练：epochs=10, batch=512
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+epoch=1, train_loss=2.08468, train_auc=0.85255, train_f1=0.76687, test_loss=2.02340, test_auc=0.89386, test_f1=0.82152
+[k=10, precision=19.800%, recall=9.456%, f1=12.799%][k=36, precision=13.250%, recall=22.779%, f1=16.754%][k=100, precision=8.630%, recall=41.213%, f1=14.272%]
+epoch_time=32.64926218986511s
+epoch=2, train_loss=1.99321, train_auc=0.90804, train_f1=0.83392, test_loss=1.99979, test_auc=0.90709, test_f1=0.83321
+[k=10, precision=19.600%, recall=9.360%, f1=12.670%][k=36, precision=13.944%, recall=23.973%, f1=17.633%][k=100, precision=9.460%, recall=45.177%, f1=15.644%]
+epoch_time=25.184635639190674s
+epoch=3, train_loss=1.95034, train_auc=0.92891, train_f1=0.85574, test_loss=1.99614, test_auc=0.91018, test_f1=0.83505
+[k=10, precision=20.200%, recall=9.647%, f1=13.058%][k=36, precision=13.917%, recall=23.926%, f1=17.597%][k=100, precision=9.290%, recall=44.365%, f1=15.363%]
+epoch_time=25.574430465698242s
+epoch=4, train_loss=1.91715, train_auc=0.94331, train_f1=0.87233, test_loss=2.00240, test_auc=0.91119, test_f1=0.83906
+[k=10, precision=18.500%, recall=8.835%, f1=11.959%][k=36, precision=13.889%, recall=23.878%, f1=17.562%][k=100, precision=9.280%, recall=44.317%, f1=15.346%]
+epoch_time=25.31909155845642s
+epoch=5, train_loss=1.89385, train_auc=0.95226, train_f1=0.88389, test_loss=2.01476, test_auc=0.90970, test_f1=0.83789
+[k=10, precision=18.800%, recall=8.978%, f1=12.153%][k=36, precision=13.889%, recall=23.878%, f1=17.562%][k=100, precision=9.130%, recall=43.601%, f1=15.098%]
+epoch_time=30.310932159423828s
+epoch=6, train_loss=1.87789, train_auc=0.95816, train_f1=0.89161, test_loss=2.02611, test_auc=0.90723, test_f1=0.83300
+[k=10, precision=18.300%, recall=8.739%, f1=11.829%][k=36, precision=13.361%, recall=22.970%, f1=16.895%][k=100, precision=9.090%, recall=43.410%, f1=15.032%]
+epoch_time=30.88769769668579s
+epoch=7, train_loss=1.86648, train_auc=0.96215, train_f1=0.89714, test_loss=2.03796, test_auc=0.90581, test_f1=0.83262
+[k=10, precision=18.700%, recall=8.930%, f1=12.088%][k=36, precision=13.000%, recall=22.350%, f1=16.438%][k=100, precision=9.060%, recall=43.266%, f1=14.983%]
+epoch_time=32.98147463798523s
+epoch=8, train_loss=1.85780, train_auc=0.96508, train_f1=0.90174, test_loss=2.05012, test_auc=0.90359, test_f1=0.83099
+[k=10, precision=18.500%, recall=8.835%, f1=11.959%][k=36, precision=12.694%, recall=21.824%, f1=16.052%][k=100, precision=9.000%, recall=42.980%, f1=14.883%]
+epoch_time=31.63425064086914s
+epoch=9, train_loss=1.85136, train_auc=0.96726, train_f1=0.90492, test_loss=2.06149, test_auc=0.90288, test_f1=0.82974
+[k=10, precision=16.900%, recall=8.071%, f1=10.924%][k=36, precision=12.806%, recall=22.015%, f1=16.192%][k=100, precision=8.820%, recall=42.120%, f1=14.586%]
+epoch_time=34.57749938964844s
+epoch=10, train_loss=1.84653, train_auc=0.96886, train_f1=0.90753, test_loss=2.07033, test_auc=0.90317, test_f1=0.83122
+[k=10, precision=17.700%, recall=8.453%, f1=11.441%][k=36, precision=12.750%, recall=21.920%, f1=16.122%][k=100, precision=8.900%, recall=42.502%, f1=14.718%]
+epoch_time=33.24856090545654s
+（耗时302.49280738830566秒）
+初始化KGCN模型：n_user=6036, n_entity=182011, n_relation=12, dim=16, iter_size=1, neighbor_size=12, l2=1e-07
+开始训练：epochs=10, batch=512
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+epoch=1, train_loss=0.47226, train_auc=0.85513, train_f1=0.77126, test_loss=0.41180, test_auc=0.89347, test_f1=0.82019
+[k=10, precision=19.100%, recall=9.121%, f1=12.346%][k=36, precision=13.194%, recall=22.684%, f1=16.684%][k=100, precision=8.580%, recall=40.974%, f1=14.189%]
+epoch_time=42.16403293609619s
+epoch=2, train_loss=0.37916, train_auc=0.91080, train_f1=0.83721, test_loss=0.38266, test_auc=0.90950, test_f1=0.83646
+[k=10, precision=20.000%, recall=9.551%, f1=12.928%][k=36, precision=14.111%, recall=24.260%, f1=17.843%][k=100, precision=9.590%, recall=45.798%, f1=15.859%]
+epoch_time=29.933124542236328s
+epoch=3, train_loss=0.33533, train_auc=0.93167, train_f1=0.85929, test_loss=0.37702, test_auc=0.91403, test_f1=0.84134
+[k=10, precision=21.300%, recall=10.172%, f1=13.769%][k=36, precision=14.778%, recall=25.406%, f1=18.686%][k=100, precision=9.770%, recall=46.657%, f1=16.157%]
+epoch_time=34.064016580581665s
+epoch=4, train_loss=0.30444, train_auc=0.94464, train_f1=0.87465, test_loss=0.38478, test_auc=0.91302, test_f1=0.83967
+[k=10, precision=19.600%, recall=9.360%, f1=12.670%][k=36, precision=14.194%, recall=24.403%, f1=17.949%][k=100, precision=9.640%, recall=46.036%, f1=15.942%]
+epoch_time=32.42642688751221s
+epoch=5, train_loss=0.28319, train_auc=0.95282, train_f1=0.88491, test_loss=0.39476, test_auc=0.91219, test_f1=0.83912
+[k=10, precision=20.000%, recall=9.551%, f1=12.928%][k=36, precision=14.028%, recall=24.117%, f1=17.738%][k=100, precision=9.480%, recall=45.272%, f1=15.677%]
+epoch_time=25.20028257369995s
+epoch=6, train_loss=0.26746, train_auc=0.95854, train_f1=0.89278, test_loss=0.40535, test_auc=0.90985, test_f1=0.83550
+[k=10, precision=19.900%, recall=9.503%, f1=12.864%][k=36, precision=13.722%, recall=23.591%, f1=17.352%][k=100, precision=9.230%, recall=44.078%, f1=15.264%]
+epoch_time=25.050008296966553s
+epoch=7, train_loss=0.25607, train_auc=0.96249, train_f1=0.89829, test_loss=0.41845, test_auc=0.90768, test_f1=0.83381
+[k=10, precision=18.900%, recall=9.026%, f1=12.217%][k=36, precision=13.972%, recall=24.021%, f1=17.668%][k=100, precision=9.140%, recall=43.649%, f1=15.115%]
+epoch_time=25.141419649124146s
+epoch=8, train_loss=0.24737, train_auc=0.96545, train_f1=0.90222, test_loss=0.42970, test_auc=0.90835, test_f1=0.83540
+[k=10, precision=19.900%, recall=9.503%, f1=12.864%][k=36, precision=13.667%, recall=23.496%, f1=17.281%][k=100, precision=9.280%, recall=44.317%, f1=15.346%]
+epoch_time=25.09461545944214s
+epoch=9, train_loss=0.24116, train_auc=0.96756, train_f1=0.90536, test_loss=0.44126, test_auc=0.90235, test_f1=0.82838
+[k=10, precision=18.200%, recall=8.691%, f1=11.765%][k=36, precision=13.639%, recall=23.448%, f1=17.246%][k=100, precision=8.840%, recall=42.216%, f1=14.619%]
+epoch_time=25.28594946861267s
+epoch=10, train_loss=0.23583, train_auc=0.96932, train_f1=0.90844, test_loss=0.45167, test_auc=0.90480, test_f1=0.83243
+[k=10, precision=17.400%, recall=8.309%, f1=11.248%][k=36, precision=13.667%, recall=23.496%, f1=17.281%][k=100, precision=8.910%, recall=42.550%, f1=14.735%]
+epoch_time=25.328194618225098s
+（耗时289.781800031662秒）
+初始化KGNNLS模型：n_user=6036, n_entity=182011, n_relation=12, dim=16, iter_size=1, neighbor_size=14, l2=1e-07
+开始训练：epochs=10, batch=512
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+epoch=1, train_loss=2.16446, train_auc=0.84789, train_f1=0.76184, test_loss=2.10781, test_auc=0.88820, test_f1=0.81428
+[k=10, precision=20.100%, recall=9.599%, f1=12.993%][k=36, precision=13.361%, recall=22.970%, f1=16.895%][k=100, precision=8.650%, recall=41.309%, f1=14.305%]
+epoch_time=35.345913887023926s
+epoch=2, train_loss=2.06877, train_auc=0.90735, train_f1=0.83297, test_loss=2.07332, test_auc=0.90737, test_f1=0.83211
+[k=10, precision=20.800%, recall=9.933%, f1=13.445%][k=36, precision=14.417%, recall=24.785%, f1=18.230%][k=100, precision=9.310%, recall=44.460%, f1=15.396%]
+epoch_time=25.923654079437256s
+epoch=3, train_loss=2.02465, train_auc=0.92884, train_f1=0.85584, test_loss=2.06993, test_auc=0.91089, test_f1=0.83953
+[k=10, precision=22.600%, recall=10.793%, f1=14.609%][k=36, precision=14.861%, recall=25.549%, f1=18.792%][k=100, precision=9.610%, recall=45.893%, f1=15.892%]
+epoch_time=26.064421892166138s
+epoch=4, train_loss=1.99401, train_auc=0.94196, train_f1=0.87097, test_loss=2.07516, test_auc=0.91091, test_f1=0.83858
+[k=10, precision=21.900%, recall=10.458%, f1=14.156%][k=36, precision=14.889%, recall=25.597%, f1=18.827%][k=100, precision=9.580%, recall=45.750%, f1=15.843%]
+epoch_time=26.017770528793335s
+epoch=5, train_loss=1.97118, train_auc=0.95093, train_f1=0.88194, test_loss=2.08539, test_auc=0.91016, test_f1=0.83671
+[k=10, precision=21.800%, recall=10.411%, f1=14.092%][k=36, precision=14.528%, recall=24.976%, f1=18.370%][k=100, precision=9.500%, recall=45.368%, f1=15.710%]
+epoch_time=26.06929302215576s
+epoch=6, train_loss=1.95487, train_auc=0.95705, train_f1=0.89029, test_loss=2.09733, test_auc=0.90721, test_f1=0.83360
+[k=10, precision=21.700%, recall=10.363%, f1=14.027%][k=36, precision=14.778%, recall=25.406%, f1=18.686%][k=100, precision=9.470%, recall=45.224%, f1=15.661%]
+epoch_time=26.059499263763428s
+epoch=7, train_loss=1.94235, train_auc=0.96146, train_f1=0.89650, test_loss=2.10813, test_auc=0.90714, test_f1=0.83345
+[k=10, precision=19.900%, recall=9.503%, f1=12.864%][k=36, precision=14.250%, recall=24.499%, f1=18.019%][k=100, precision=9.340%, recall=44.604%, f1=15.446%]
+epoch_time=26.08914589881897s
+epoch=8, train_loss=1.93348, train_auc=0.96452, train_f1=0.90114, test_loss=2.11919, test_auc=0.90497, test_f1=0.83139
+[k=10, precision=19.600%, recall=9.360%, f1=12.670%][k=36, precision=14.278%, recall=24.546%, f1=18.054%][k=100, precision=9.270%, recall=44.269%, f1=15.330%]
+epoch_time=26.093669652938843s
+epoch=9, train_loss=1.92668, train_auc=0.96682, train_f1=0.90412, test_loss=2.13038, test_auc=0.90310, test_f1=0.82823
+[k=10, precision=19.200%, recall=9.169%, f1=12.411%][k=36, precision=13.972%, recall=24.021%, f1=17.668%][k=100, precision=9.310%, recall=44.460%, f1=15.396%]
+epoch_time=26.096911907196045s
+epoch=10, train_loss=1.92157, train_auc=0.96856, train_f1=0.90712, test_loss=2.13996, test_auc=0.90216, test_f1=0.82781
+[k=10, precision=19.400%, recall=9.265%, f1=12.540%][k=36, precision=14.000%, recall=24.069%, f1=17.703%][k=100, precision=9.210%, recall=43.983%, f1=15.231%]
+epoch_time=25.8881516456604s
+（耗时269.742130279541秒）
+初始化KGCN模型：n_user=6036, n_entity=182011, n_relation=12, dim=16, iter_size=1, neighbor_size=14, l2=1e-07
+开始训练：epochs=10, batch=512
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+epoch=1, train_loss=0.48071, train_auc=0.84821, train_f1=0.76149, test_loss=0.41601, test_auc=0.89125, test_f1=0.81742
+[k=10, precision=20.200%, recall=9.647%, f1=13.058%][k=36, precision=12.917%, recall=22.206%, f1=16.333%][k=100, precision=8.640%, recall=41.261%, f1=14.288%]
+epoch_time=32.86204719543457s
+epoch=2, train_loss=0.38046, train_auc=0.91015, train_f1=0.83609, test_loss=0.38438, test_auc=0.90868, test_f1=0.83621
+[k=10, precision=21.000%, recall=10.029%, f1=13.575%][k=36, precision=14.361%, recall=24.690%, f1=18.159%][k=100, precision=9.320%, recall=44.508%, f1=15.413%]
+epoch_time=24.561723947525024s
+epoch=3, train_loss=0.33502, train_auc=0.93181, train_f1=0.85969, test_loss=0.38134, test_auc=0.91254, test_f1=0.83943
+[k=10, precision=21.000%, recall=10.029%, f1=13.575%][k=36, precision=14.778%, recall=25.406%, f1=18.686%][k=100, precision=9.470%, recall=45.224%, f1=15.661%]
+epoch_time=24.781910181045532s
+epoch=4, train_loss=0.30354, train_auc=0.94504, train_f1=0.87475, test_loss=0.38736, test_auc=0.91155, test_f1=0.83816
+[k=10, precision=20.100%, recall=9.599%, f1=12.993%][k=36, precision=13.944%, recall=23.973%, f1=17.633%][k=100, precision=9.320%, recall=44.508%, f1=15.413%]
+epoch_time=24.555432081222534s
+epoch=5, train_loss=0.28156, train_auc=0.95347, train_f1=0.88575, test_loss=0.40173, test_auc=0.90886, test_f1=0.83504
+[k=10, precision=20.700%, recall=9.885%, f1=13.381%][k=36, precision=14.361%, recall=24.690%, f1=18.159%][k=100, precision=9.390%, recall=44.842%, f1=15.528%]
+epoch_time=24.892832040786743s
+epoch=6, train_loss=0.26639, train_auc=0.95895, train_f1=0.89311, test_loss=0.41424, test_auc=0.90659, test_f1=0.83165
+[k=10, precision=19.600%, recall=9.360%, f1=12.670%][k=36, precision=13.778%, recall=23.687%, f1=17.422%][k=100, precision=9.260%, recall=44.222%, f1=15.313%]
+epoch_time=24.777358293533325s
+epoch=7, train_loss=0.25531, train_auc=0.96282, train_f1=0.89892, test_loss=0.42460, test_auc=0.90711, test_f1=0.83312
+[k=10, precision=18.900%, recall=9.026%, f1=12.217%][k=36, precision=13.944%, recall=23.973%, f1=17.633%][k=100, precision=9.120%, recall=43.553%, f1=15.082%]
+epoch_time=24.805994033813477s
+epoch=8, train_loss=0.24678, train_auc=0.96570, train_f1=0.90293, test_loss=0.43794, test_auc=0.90284, test_f1=0.82893
+[k=10, precision=19.100%, recall=9.121%, f1=12.346%][k=36, precision=13.528%, recall=23.257%, f1=17.106%][k=100, precision=9.140%, recall=43.649%, f1=15.115%]
+epoch_time=24.811193704605103s
+epoch=9, train_loss=0.24095, train_auc=0.96769, train_f1=0.90594, test_loss=0.44791, test_auc=0.90257, test_f1=0.82722
+[k=10, precision=19.000%, recall=9.074%, f1=12.282%][k=36, precision=13.278%, recall=22.827%, f1=16.790%][k=100, precision=9.140%, recall=43.649%, f1=15.115%]
+epoch_time=24.654943227767944s
+epoch=10, train_loss=0.23616, train_auc=0.96926, train_f1=0.90880, test_loss=0.45815, test_auc=0.90044, test_f1=0.82668
+[k=10, precision=18.900%, recall=9.026%, f1=12.217%][k=36, precision=13.139%, recall=22.588%, f1=16.614%][k=100, precision=9.280%, recall=44.317%, f1=15.346%]
+epoch_time=24.73916792869568s
+（耗时255.5206823348999秒）
+初始化KGNNLS模型：n_user=6036, n_entity=182011, n_relation=12, dim=16, iter_size=1, neighbor_size=16, l2=1e-07
+开始训练：epochs=10, batch=512
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+epoch=1, train_loss=2.22554, train_auc=0.85038, train_f1=0.76668, test_loss=2.18147, test_auc=0.88210, test_f1=0.80781
+[k=10, precision=18.900%, recall=9.026%, f1=12.217%][k=36, precision=11.944%, recall=20.535%, f1=15.104%][k=100, precision=8.140%, recall=38.873%, f1=13.461%]
+epoch_time=36.69302010536194s
+epoch=2, train_loss=2.14322, train_auc=0.90218, train_f1=0.82714, test_loss=2.14052, test_auc=0.90596, test_f1=0.83254
+[k=10, precision=20.300%, recall=9.694%, f1=13.122%][k=36, precision=14.139%, recall=24.308%, f1=17.878%][k=100, precision=9.220%, recall=44.031%, f1=15.247%]
+epoch_time=26.97870707511902s
+epoch=3, train_loss=2.08980, train_auc=0.92860, train_f1=0.85592, test_loss=2.13378, test_auc=0.91072, test_f1=0.83934
+[k=10, precision=22.000%, recall=10.506%, f1=14.221%][k=36, precision=14.750%, recall=25.358%, f1=18.651%][k=100, precision=9.210%, recall=43.983%, f1=15.231%]
+epoch_time=26.910382986068726s
+epoch=4, train_loss=2.05723, train_auc=0.94250, train_f1=0.87161, test_loss=2.14044, test_auc=0.91096, test_f1=0.83619
+[k=10, precision=20.000%, recall=9.551%, f1=12.928%][k=36, precision=14.056%, recall=24.164%, f1=17.773%][k=100, precision=9.370%, recall=44.747%, f1=15.495%]
+epoch_time=27.08376455307007s
+epoch=5, train_loss=2.03508, train_auc=0.95123, train_f1=0.88258, test_loss=2.14865, test_auc=0.91045, test_f1=0.83728
+[k=10, precision=19.700%, recall=9.408%, f1=12.734%][k=36, precision=14.306%, recall=24.594%, f1=18.089%][k=100, precision=9.050%, recall=43.219%, f1=14.966%]
+epoch_time=27.09713339805603s
+epoch=6, train_loss=2.01897, train_auc=0.95721, train_f1=0.89067, test_loss=2.16015, test_auc=0.90805, test_f1=0.83450
+[k=10, precision=19.500%, recall=9.312%, f1=12.605%][k=36, precision=14.000%, recall=24.069%, f1=17.703%][k=100, precision=9.270%, recall=44.269%, f1=15.330%]
+epoch_time=27.130534887313843s
+epoch=7, train_loss=2.00731, train_auc=0.96129, train_f1=0.89591, test_loss=2.17260, test_auc=0.90593, test_f1=0.83168
+[k=10, precision=18.300%, recall=8.739%, f1=11.829%][k=36, precision=13.250%, recall=22.779%, f1=16.754%][k=100, precision=9.090%, recall=43.410%, f1=15.032%]
+epoch_time=27.02194046974182s
+epoch=8, train_loss=1.99813, train_auc=0.96446, train_f1=0.90097, test_loss=2.18239, test_auc=0.90545, test_f1=0.83083
+[k=10, precision=18.500%, recall=8.835%, f1=11.959%][k=36, precision=13.389%, recall=23.018%, f1=16.930%][k=100, precision=9.140%, recall=43.649%, f1=15.115%]
+epoch_time=27.243960857391357s
+epoch=9, train_loss=1.99102, train_auc=0.96682, train_f1=0.90450, test_loss=2.19318, test_auc=0.90330, test_f1=0.82974
+[k=10, precision=18.400%, recall=8.787%, f1=11.894%][k=36, precision=13.194%, recall=22.684%, f1=16.684%][k=100, precision=9.070%, recall=43.314%, f1=14.999%]
+epoch_time=27.12995934486389s
+epoch=10, train_loss=1.98586, train_auc=0.96861, train_f1=0.90724, test_loss=2.20224, test_auc=0.90437, test_f1=0.83138
+[k=10, precision=17.000%, recall=8.118%, f1=10.989%][k=36, precision=12.972%, recall=22.302%, f1=16.403%][k=100, precision=9.120%, recall=43.553%, f1=15.082%]
+epoch_time=26.93273687362671s
+（耗时280.334636926651秒）
+初始化KGCN模型：n_user=6036, n_entity=182011, n_relation=12, dim=16, iter_size=1, neighbor_size=16, l2=1e-07
+开始训练：epochs=10, batch=512
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+D:\work\python\PycharmProjects\tftest\venv37\lib\site-packages\tensorflow_core\python\framework\indexed_slices.py:433: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
+epoch=1, train_loss=0.47746, train_auc=0.85120, train_f1=0.76681, test_loss=0.42106, test_auc=0.88799, test_f1=0.81549
+[k=10, precision=18.700%, recall=8.930%, f1=12.088%][k=36, precision=13.222%, recall=22.732%, f1=16.719%][k=100, precision=8.450%, recall=40.353%, f1=13.974%]
+epoch_time=35.510772943496704s
+epoch=2, train_loss=0.38645, train_auc=0.90713, train_f1=0.83234, test_loss=0.38930, test_auc=0.90596, test_f1=0.83337
+[k=10, precision=20.900%, recall=9.981%, f1=13.510%][k=36, precision=14.417%, recall=24.785%, f1=18.230%][k=100, precision=9.180%, recall=43.840%, f1=15.181%]
+epoch_time=26.249751329421997s
+epoch=3, train_loss=0.33881, train_auc=0.93020, train_f1=0.85748, test_loss=0.38483, test_auc=0.91104, test_f1=0.83885
+[k=10, precision=21.500%, recall=10.267%, f1=13.898%][k=36, precision=14.611%, recall=25.119%, f1=18.476%][k=100, precision=9.550%, recall=45.606%, f1=15.793%]
+epoch_time=26.237168073654175s
+epoch=4, train_loss=0.30649, train_auc=0.94392, train_f1=0.87306, test_loss=0.39074, test_auc=0.90954, test_f1=0.83394
+[k=10, precision=20.200%, recall=9.647%, f1=13.058%][k=36, precision=14.639%, recall=25.167%, f1=18.511%][k=100, precision=9.460%, recall=45.177%, f1=15.644%]
+epoch_time=26.412403106689453s
+epoch=5, train_loss=0.28400, train_auc=0.95260, train_f1=0.88441, test_loss=0.39868, test_auc=0.91005, test_f1=0.83658
+[k=10, precision=20.700%, recall=9.885%, f1=13.381%][k=36, precision=14.194%, recall=24.403%, f1=17.949%][k=100, precision=9.420%, recall=44.986%, f1=15.578%]
+epoch_time=26.29328441619873s
+epoch=6, train_loss=0.26861, train_auc=0.95819, train_f1=0.89211, test_loss=0.40944, test_auc=0.90905, test_f1=0.83484
+[k=10, precision=20.700%, recall=9.885%, f1=13.381%][k=36, precision=14.444%, recall=24.833%, f1=18.265%][k=100, precision=9.530%, recall=45.511%, f1=15.760%]
+epoch_time=26.179973125457764s
+epoch=7, train_loss=0.25790, train_auc=0.96195, train_f1=0.89755, test_loss=0.42006, test_auc=0.90703, test_f1=0.83299
+[k=10, precision=20.400%, recall=9.742%, f1=13.187%][k=36, precision=14.500%, recall=24.928%, f1=18.335%][k=100, precision=9.350%, recall=44.651%, f1=15.462%]
+epoch_time=26.25531530380249s
+epoch=8, train_loss=0.24925, train_auc=0.96490, train_f1=0.90169, test_loss=0.43139, test_auc=0.90631, test_f1=0.83369
+[k=10, precision=18.600%, recall=8.883%, f1=12.023%][k=36, precision=13.750%, recall=23.639%, f1=17.387%][k=100, precision=9.310%, recall=44.460%, f1=15.396%]
+epoch_time=26.318925857543945s
+epoch=9, train_loss=0.24247, train_auc=0.96720, train_f1=0.90501, test_loss=0.44162, test_auc=0.90403, test_f1=0.83117
+[k=10, precision=19.000%, recall=9.074%, f1=12.282%][k=36, precision=13.833%, recall=23.782%, f1=17.492%][k=100, precision=9.260%, recall=44.222%, f1=15.313%]
+epoch_time=26.191208600997925s
+epoch=10, train_loss=0.23699, train_auc=0.96900, train_f1=0.90831, test_loss=0.45037, test_auc=0.90340, test_f1=0.82983
+[k=10, precision=18.900%, recall=9.026%, f1=12.217%][k=36, precision=13.667%, recall=23.496%, f1=17.281%][k=100, precision=9.230%, recall=44.078%, f1=15.264%]
+epoch_time=26.190316438674927s
+（耗时271.96516513824463秒）
+Process finished with exit code 0

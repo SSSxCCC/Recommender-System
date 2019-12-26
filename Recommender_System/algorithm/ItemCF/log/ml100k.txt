@@ -1,15 +1,17 @@
 Python 3.7.5 (tags/v3.7.5:5c02a39a0b, Oct 15 2019, 00:11:34) [MSC v.1916 64 bit (AMD64)] on win32
-runfile('D:/work/PycharmProjects/test/Recommender_System/algorithm/ItemCF/main.py', wdir='D:/work/PycharmProjects/test/Recommender_System/algorithm/ItemCF')
-开始读数据ml-100k。共100000条数据，有943个用户，1682个电影。
-（耗时0.1735072135925293秒）
-开始数据切分，test_ratio=0.2, shuffle=True
-（耗时0.06981372833251953秒）
+runfile('D:/work/python/PycharmProjects/tftest/Recommender_System/algorithm/ItemCF/main.py', wdir='D:/work/python/PycharmProjects/tftest/Recommender_System/algorithm/ItemCF')
+开始读数据，data_name=ml100k, expect_length=100000, expect_user=943, expect_item=1682
+（耗时0.12466645240783691秒）
+开始进行id规整化
+（耗时0.021941184997558594秒）
+开始数据切分，test_ratio=0.4, shuffle=True, ensure_positive=False
+（耗时0.05684852600097656秒）
 开始准备topk评估数据，n_sample_user=300
-（耗时0.32416248321533203秒）
-开始计算每两个物品之间的相似度。
-（耗时1.3812446594238281秒）
+（耗时0.24135398864746094秒）
+开始计算每两个物品之间的相似度
+（耗时0.7280523777008057秒）
 开始计算用户物品评分矩阵，N=10
-（耗时0.9212372303009033秒）
-[k=10, precision=32.433%, recall=13.880%, f1=19.441%]
-[k=36, precision=20.407%, recall=31.441%, f1=24.750%]
-[k=100, precision=12.030%, recall=51.484%, f1=19.503%]
+（耗时0.6038994789123535秒）
+[k=10, precision=43.433%, recall=10.193%, f1=16.511%]
+[k=36, precision=29.389%, recall=24.830%, f1=26.918%]
+[k=100, precision=18.397%, recall=43.175%, f1=25.800%]

@@ -1,15 +1,17 @@
 Python 3.7.5 (tags/v3.7.5:5c02a39a0b, Oct 15 2019, 00:11:34) [MSC v.1916 64 bit (AMD64)] on win32
-runfile('D:/work/PycharmProjects/test/Recommender_System/algorithm/UserCF/main.py', wdir='D:/work/PycharmProjects/test/Recommender_System/algorithm/UserCF')
-开始读数据lastfm。共92834条数据，有1892个用户，17632个艺术家。
-（耗时0.12666058540344238秒）
-开始数据切分，test_ratio=0.2, shuffle=True
-（耗时0.06981801986694336秒）
+>>> runfile('D:/work/python/PycharmProjects/tftest/Recommender_System/algorithm/UserCF/main.py', wdir='D:/work/python/PycharmProjects/tftest/Recommender_System/algorithm/UserCF')
+开始读数据，data_name=lastfm, expect_length=92834, expect_user=1892, expect_item=17632
+（耗时0.0997622013092041秒）
+开始进行id规整化
+（耗时0.02094435691833496秒）
+开始数据切分，test_ratio=0.4, shuffle=True, ensure_positive=False
+（耗时0.04886937141418457秒）
 开始准备topk评估数据，n_sample_user=300
-（耗时0.5056450366973877秒）
-开始计算每两个用户之间的相似度。
-（耗时1.080754041671753秒）
+（耗时0.41286802291870117秒）
+开始计算每两个用户之间的相似度
+（耗时0.7874512672424316秒）
 开始计算用户物品评分矩阵，N=80
-（耗时2.610713481903076秒）
-[k=10, precision=16.333%, recall=16.672%, f1=16.501%]
-[k=36, precision=8.315%, recall=30.555%, f1=13.072%]
-[k=100, precision=4.547%, recall=46.410%, f1=8.282%]
+（耗时2.1219868659973145秒）
+[k=10, precision=27.867%, recall=14.479%, f1=19.056%]
+[k=36, precision=15.519%, recall=29.027%, f1=20.224%]
+[k=100, precision=8.430%, recall=43.800%, f1=14.139%]

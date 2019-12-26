@@ -2,12 +2,11 @@ from typing import Tuple
 import tensorflow as tf
 from tensorflow.keras.regularizers import l2 as reg_l2
 from Recommender_System.algorithm.MKR.layer import cross_compress_unit
+from Recommender_System.utility.decorator import logger
 
 
+@logger('初始化MKR模型：', ('n_user', 'n_item', 'n_entity', 'n_relation', 'dim', 'L', 'H', 'l2'))
 def MKR_model(n_user: int, n_item: int, n_entity: int, n_relation: int, dim=8, L=1, H=1, l2=1e-6) -> Tuple[tf.keras.Model, tf.keras.Model]:
-    print('初始化MKR模型：n_user=', n_user, ', n_item=', n_item, ', n_entity=', n_entity, ', n_relation=', n_relation,
-          ', dim=', dim, ', L=', L, ', H=', H, ', l2=', l2, sep='')
-
     user_id = tf.keras.Input(shape=(), name='user_id', dtype=tf.int32)
     item_id = tf.keras.Input(shape=(), name='item_id', dtype=tf.int32)
     head_id = tf.keras.Input(shape=(), name='head_id', dtype=tf.int32)

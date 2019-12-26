@@ -1,14 +1,14 @@
-import time
 import os
 from typing import List, Callable, Tuple
+from Recommender_System.utility.decorator import logger
 
-# 记下自己的路径，确保其它py文件调用时读数据路径正确
-root_path = os.path.dirname(__file__)
+# 记下ds文件夹的路径，确保其它py文件调用时读文件路径正确
+ds_path = os.path.join(os.path.dirname(__file__), 'ds')
 
 
 def _read_ml(relative_path: str, separator: str) -> List[Tuple[int, int, int, int]]:
     data = []
-    with open(os.path.join(root_path, relative_path), 'r') as f:
+    with open(os.path.join(ds_path, relative_path), 'r') as f:
         for line in f.readlines():
             values = line.strip().split(separator)
             user_id, movie_id, rating, timestamp = int(values[0]), int(values[1]), int(values[2]), int(values[3])
@@ -24,9 +24,19 @@ def _read_ml1m() -> List[Tuple[int, int, int, int]]:
     return _read_ml('ml-1m/ratings.dat', '::')
 
 
+def _read_ml20m() -> List[Tuple[int, int, float, int]]:
+    data = []
+    with open(os.path.join(ds_path, 'ml-20m/ratings.csv'), 'r') as f:
+        for line in f.readlines()[1:]:
+            values = line.strip().split(',')
+            user_id, movie_id, rating, timestamp = int(values[0]), int(values[1]), float(values[2]), int(values[3])
+            data.append((user_id, movie_id, rating, timestamp))
+    return data
+
+
 def _read_lastfm() -> List[Tuple[int, int, int]]:
     data = []
-    with open(os.path.join(root_path, 'lastfm-2k/user_artists.dat'), 'r') as f:
+    with open(os.path.join(ds_path, 'lastfm-2k/user_artists.dat'), 'r') as f:
         for line in f.readlines()[1:]:
             values = line.strip().split('\t')
             user_id, artist_id, weight = int(values[0]), int(values[1]), int(values[2])
@@ -34,28 +44,31 @@ def _read_lastfm() -> List[Tuple[int, int, int]]:
     return data
 
 
+@logger('开始读数据，', ('data_name', 'expect_length', 'expect_user', 'expect_item'))
 def _load_data(read_data_fn: Callable[[], List[tuple]], expect_length: int, expect_user: int, expect_item: int,
-               data_name: str, user_name='用户', item_name='物品') -> List[tuple]:
-    print('开始读数据', data_name, '。共', expect_length, '条数据，有',
-          expect_user, '个', user_name, '，', expect_item, '个', item_name, '。', sep='')
-    start_time = time.time()
+               data_name: str) -> List[tuple]:
     data = read_data_fn()
     n_user, n_item = len(set(d[0] for d in data)), len(set(d[1] for d in data))
-    assert len(data) == expect_length and n_user == expect_user and n_item == expect_item
-    print('（耗时', time.time() - start_time, '秒）', sep='')
+    assert len(data) == expect_length, data_name + ' length ' + str(len(data)) + ' != ' + str(expect_length)
+    assert n_user == expect_user, data_name + ' user ' + str(n_user) + ' != ' + str(expect_user)
+    assert n_item == expect_item, data_name + ' item ' + str(n_item) + ' != ' + str(expect_item)
     return data
 
 
 def ml100k() -> List[Tuple[int, int, int, int]]:
-    return _load_data(_read_ml100k, 100000, 943, 1682, 'ml100k', item_name='电影')
+    return _load_data(_read_ml100k, 100000, 943, 1682, 'ml100k')
 
 
 def ml1m() -> List[Tuple[int, int, int, int]]:
-    return _load_data(_read_ml1m, 1000209, 6040, 3706, 'ml1m', item_name='电影')
+    return _load_data(_read_ml1m, 1000209, 6040, 3706, 'ml1m')
+
+
+def ml20m() -> List[Tuple[int, int, float, int]]:
+    return _load_data(_read_ml20m, 20000263, 138493, 26744, 'ml20m')
 
 
 def lastfm() -> List[Tuple[int, int, int]]:
-    return _load_data(_read_lastfm, 92834, 1892, 17632, 'lastfm', item_name='艺术家')
+    return _load_data(_read_lastfm, 92834, 1892, 17632, 'lastfm')
 
 
 # 测试数据读的是否正确

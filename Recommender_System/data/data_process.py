@@ -1,11 +1,30 @@
-import time
 import random
 import numpy as np
 from typing import Tuple, Dict, List, Callable
 from collections import defaultdict
+from concurrent.futures import ProcessPoolExecutor
 from Recommender_System.utility.evaluation import TopkData
+from Recommender_System.utility.decorator import logger
 
 
+def _negative_sample_init(_item_set, _ratio, _negative_sample_weight):  # 用于子进程初始化全局变量
+    global item_set, ratio, negative_sample_weight
+    item_set, ratio, negative_sample_weight = _item_set,  _ratio, _negative_sample_weight
+
+
+def _negative_sample(positive_set, unpositive_set):  # 对单个用户进行负采样
+    valid_negative_list = list(item_set - positive_set - unpositive_set)  # 可以取负样例的物品id列表
+    n_negative_sample = min(int(len(positive_set) * ratio), len(valid_negative_list))  # 采集负样例数量
+    if n_negative_sample <= 0:
+        return []
+
+    sum_weight = sum([negative_sample_weight[item_id] for item_id in valid_negative_list])
+    weights = [negative_sample_weight[item_id] / sum_weight for item_id in valid_negative_list]  # 负样本采集权重
+
+    return np.random.choice(valid_negative_list, n_negative_sample, False, weights)  # 采集n_negative_sample个负样例
+
+
+@logger('开始采集负样本，', ('ratio', 'threshold', 'method'))
 def negative_sample(data: List[tuple], ratio=1, threshold=0, method='random') -> List[Tuple[int, int, int]]:
     """
     采集负样本
@@ -17,9 +36,6 @@ def negative_sample(data: List[tuple], ratio=1, threshold=0, method='random') ->
     :param method: 采集方式，random是均匀随机采集，popular是按流行度随机采集
     :return: 带上负样本的数据集
     """
-    print('开始采集负样本，负正样本比例为', ratio, '，权重阈值为', threshold, '，方法为', method, '。', sep='')
-    start_time = time.time()
-
     # 负样本采集权重
     item_set = {d[1] for d in data}
     if method == 'random':
@@ -31,7 +47,7 @@ def negative_sample(data: List[tuple], ratio=1, threshold=0, method='random') ->
     else:
         raise ValueError("参数method必须是'random'或'popular'")
 
-    # 得到每个用户正样本集合
+    # 得到每个用户正样本与非正样本集合
     user_positive_set = defaultdict(set)
     user_unpositive_set = defaultdict(set)
     for d in data:
@@ -42,37 +58,29 @@ def negative_sample(data: List[tuple], ratio=1, threshold=0, method='random') ->
             user_unpositive_set[user_id].add(item_id)
 
     # 为每个用户采集负样例
+    user_list = list(user_positive_set.keys())
+    arg_positive_set = [user_positive_set[user_id] for user_id in user_list]
+    arg_unpositive_set = [user_unpositive_set[user_id] for user_id in user_list]
+    with ProcessPoolExecutor(initializer=_negative_sample_init, initargs=(item_set, ratio, negative_sample_weight)) as executor:
+        sampled_negative_items = executor.map(_negative_sample, arg_positive_set, arg_unpositive_set, chunksize=100)
+
+    # 构建新的数据集
     new_data = []
-    for user_id, positive_set in user_positive_set.items():
-        for positive_item_id in positive_set:
-            new_data.append((user_id, positive_item_id, 1))  # 将正样例加入数据集
-
-        valid_negative_list = list(item_set - positive_set - user_unpositive_set[user_id])  # 可以取负样例的物品id列表
-        n_negative_sample = min(int(len(positive_set) * ratio), len(valid_negative_list))  # 采集负样例数量
-        if n_negative_sample <= 0:
-            continue
-
-        sum_weight = sum([negative_sample_weight[item_id] for item_id in valid_negative_list])
-        weights = [negative_sample_weight[item_id] / sum_weight for item_id in valid_negative_list]  # 负样本采集权重
-
-        # 采集n_negative_sample个负样例
-        for negative_item_id in np.random.choice(valid_negative_list, n_negative_sample, False, weights):
-            new_data.append((user_id, negative_item_id, 0))  # 将负样例加入数据集
-
-    print('（耗时', time.time() - start_time, '秒）', sep='')
+    for user_id, negative_items in zip(user_list, sampled_negative_items):
+        new_data.extend([(user_id, item_id, 0) for item_id in negative_items])
+    for user_id, positive_items in user_positive_set.items():
+        new_data.extend([(user_id, item_id, 1) for item_id in positive_items])
     return new_data
 
 
-def neaten_id(data: List[Tuple[int, int, int]]) -> Tuple[List[Tuple[int, int, int]], int, int, Dict[int, int], Dict[int, int]]:  # data前两列被视为用户id和物品id
+@logger('开始进行id规整化')
+def neaten_id(data: List[Tuple[int, int, int]]) -> Tuple[List[Tuple[int, int, int]], int, int, Dict[int, int], Dict[int, int]]:
     """
     对数据的用户id和物品id进行规整化，使其id变为从0开始到数量减1
 
     :param data: 原数据，第一列是用户id，第二列是物品id，第三列是标签
     :return: 新数据，用户数量，物品数量，用户id旧到新映射，物品id旧到新映射
     """
-    print('开始进行id规整化。')
-    start_time = time.time()
-
     new_data = []
     n_user, n_item = 0, 0
     user_id_old2new, item_id_old2new = {}, {}
@@ -84,12 +92,11 @@ def neaten_id(data: List[Tuple[int, int, int]]) -> Tuple[List[Tuple[int, int, in
             item_id_old2new[item_id_old] = n_item
             n_item += 1
         new_data.append((user_id_old2new[user_id_old], item_id_old2new[item_id_old], label))
-
-    print('（耗时', time.time() - start_time, '秒）', sep='')
     return new_data, n_user, n_item, user_id_old2new, item_id_old2new
 
 
-def split(data: List[tuple], test_ratio=0.2, shuffle=True, ensure_positive=False) -> Tuple[List[tuple], List[tuple]]:
+@logger('开始数据切分，', ('test_ratio', 'shuffle', 'ensure_positive'))
+def split(data: List[tuple], test_ratio=0.4, shuffle=True, ensure_positive=False) -> Tuple[List[tuple], List[tuple]]:
     """
     将数据切分为训练集数据和测试集数据
 
@@ -99,32 +106,29 @@ def split(data: List[tuple], test_ratio=0.2, shuffle=True, ensure_positive=False
     :param ensure_positive: 是否确保训练集每个用户都有正样例
     :return: 训练集数据和测试集数据
     """
-    print('开始数据切分，test_ratio=', test_ratio, ', shuffle=', shuffle, sep='')
-    start_time = time.time()
-
     if shuffle:
         random.shuffle(data)
     n_test = int(len(data) * test_ratio)
     test_data, train_data = data[:n_test], data[n_test:]
 
     if ensure_positive:
-        user_set = {user_id for user_id, _, _ in data}
-        def train_user_without_positive_item_set():
-            train_user_with_positive_item_set = {user_id for user_id, _, label in train_data if label == 1}
-            return user_set - train_user_with_positive_item_set
+        user_set = {d[0] for d in data} - {user_id for user_id, _, label in train_data if label == 1}
+        if len(user_set) > 0:
+            print('警告：为了确保训练集数据每个用户都有正样例，%d(%f%%)条数据从测试集随机插入训练集'
+                  % (len(user_set), 100 * len(user_set) / len(data)))
 
-        i = 0
-        while len(train_user_without_positive_item_set()) > 0:
-            i += 1
-            print('\r警告：为了确保训练集数据每个用户都有正样例，对原数据进行第' + str(i) + '次随机排序。', end='')
-            random.shuffle(data)
-            test_data, train_data = data[:n_test], data[n_test:]
-        print() if i > 0 else None
+        i = len(test_data) - 1
+        while len(user_set) > 0:
+            assert i >= 0, '无法确保训练集每个用户都有正样例，因为存在没有正样例的用户：' + str(user_set)
+            if test_data[i][0] in user_set and test_data[i][2] == 1:
+                user_set.remove(test_data[i][0])
+                train_data.insert(random.randint(0, len(train_data)), test_data.pop(i))
+            i -= 1
 
-    print('（耗时', time.time() - start_time, '秒）', sep='')
     return train_data, test_data
 
 
+@logger('开始准备topk评估数据，', ('n_sample_user',))
 def prepare_topk(train_data: List[Tuple[int, int, int]], test_data: List[Tuple[int, int, int]],
                  n_user: int, n_item: int, n_sample_user=None) -> TopkData:
     """
@@ -139,8 +143,6 @@ def prepare_topk(train_data: List[Tuple[int, int, int]], test_data: List[Tuple[i
     """
     if n_sample_user is None or n_sample_user > n_user:
         n_sample_user = n_user
-    print('开始准备topk评估数据，n_sample_user=', n_sample_user, sep='')
-    start_time = time.time()
 
     user_set = np.random.choice(range(n_user), n_sample_user, False)
 
@@ -154,14 +156,12 @@ def prepare_topk(train_data: List[Tuple[int, int, int]], test_data: List[Tuple[i
     test_user_item_set = {user_id: set(range(n_item)) - item_set
                           for user_id, item_set in get_user_item_set(train_data).items()}
     test_user_positive_item_set = get_user_item_set(test_data, only_positive=True)
-
-    print('（耗时', time.time() - start_time, '秒）', sep='')
     return TopkData(test_user_item_set, test_user_positive_item_set)
 
 
 def pack(data_loader_fn: Callable[[], List[tuple]],
          negative_sample_ratio=1, negative_sample_threshold=0, negative_sample_method='random',
-         split_test_ratio=0.2, shuffle_before_split=True, split_ensure_positive=False,
+         split_test_ratio=0.4, shuffle_before_split=True, split_ensure_positive=False,
          topk_sample_user=300) -> Tuple[int, int, List[Tuple[int, int, int]], List[Tuple[int, int, int]], TopkData]:
     """
     读数据，负采样，训练集测试集切分，准备TopK评估数据
@@ -188,7 +188,7 @@ def pack(data_loader_fn: Callable[[], List[tuple]],
 
 
 def pack_kg(kg_loader_fn: Callable[[], Tuple[List[Tuple[int, int, int]], List[Tuple[int, int, int]], int, int, int, int]],
-            split_test_ratio=0.2, shuffle_before_split=True, split_ensure_positive=False, topk_sample_user=100) -> Tuple[
+            split_test_ratio=0.4, shuffle_before_split=True, split_ensure_positive=False, topk_sample_user=100) -> Tuple[
             int, int, int, int, List[Tuple[int, int, int]], List[Tuple[int, int, int]], List[Tuple[int, int, int]], TopkData]:
     """
     联合读数据和知识图谱，训练集测试集切分，准备TopK评估数据
