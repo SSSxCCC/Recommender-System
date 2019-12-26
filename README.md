@@ -15,6 +15,8 @@ Evaluation: ctr's auc f1 and topk's precision recall.
 
 ## Run
 
-[download data files](https://github.com/SSSxCCC/Recommender-System/tree/datafile) and put 'ds' and 'kg' under 'Recommender_System/data' folder.
+[Download data files](https://github.com/SSSxCCC/Recommender-System/tree/datafile) and put 'ds' and 'kg' under 'Recommender_System/data' folder.
+
+Open parent directory of current file as project in PyCharm, set up Python 3.7 interpreter and pip install tensorflow==2.1.0rc0.
 
 Go to Recommender_System/algorithm/xxx/main.py and run.
