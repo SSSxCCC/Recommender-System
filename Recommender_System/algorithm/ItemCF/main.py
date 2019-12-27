@@ -3,7 +3,7 @@ if __name__ == '__main__':
     from Recommender_System.data import data_loader, data_process
     from Recommender_System.utility.evaluation import topk_evaluate
 
-    n_user, n_item, train_data, test_data, topk_data = data_process.pack(data_loader.lastfm, negative_sample_ratio=0)
+    n_user, n_item, train_data, test_data, topk_data = data_process.pack(data_loader.ml100k, negative_sample_ratio=0)
 
     W = item_similarity(train_data, n_user, n_item)
     scores = user_item_score(train_data, n_user, n_item, W, N=10)

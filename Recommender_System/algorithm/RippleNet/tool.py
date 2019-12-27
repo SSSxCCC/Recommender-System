@@ -21,7 +21,7 @@ def construct_directed_kg(kg: List[Tuple[int, int, int]]) -> Dict[int, List[Tupl
     return kg_dict
 
 
-@logger('得到每个用户在知识图谱有向图上每跳的三元组，', ('hop_size', 'ripple_size'))
+@logger('根据知识图谱有向图得到每个用户每跳的三元组，', ('hop_size', 'ripple_size'))
 def get_ripple_set(hop_size: int, ripple_size: int, user_positive_item_list: Dict[int, List[int]],
                    kg_dict: Dict[int, List[Tuple[int, int]]]) -> Dict[int, List[Tuple[List[int], List[int], List[int]]]]:
     ripple_set = defaultdict(list)  # user -> [(hop_0_heads, hop_0_relations, hop_0_tails), (hop_1_heads, hop_1_relations, hop_1_tails), ...]
