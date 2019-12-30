@@ -7,6 +7,6 @@ if __name__ == '__main__':
 
     n_user, n_item, train_data, test_data, topk_data = data_process.pack(data_loader.ml100k)
 
-    model = LFM_model(n_user, n_item, dim=64, l2=0)
+    model = LFM_model(n_user, n_item, dim=64, l2=1e-6)
 
     train(model, train_data, test_data, topk_data, loss_object=tf.losses.MeanSquaredError(), epochs=10, batch=512)

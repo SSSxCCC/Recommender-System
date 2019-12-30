@@ -3,7 +3,7 @@ from typing import List, Tuple, Dict
 import tensorflow as tf
 from Recommender_System.utility.decorator import logger
 from Recommender_System.utility.evaluation import TopkData
-from Recommender_System.algorithm.train import log, topk
+from Recommender_System.algorithm.common import log, topk
 
 
 def fill_x_dict(x_dict, ripple_set, user_ids):

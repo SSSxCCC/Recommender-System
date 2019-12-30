@@ -1,6 +1,7 @@
 from typing import List, Tuple, Callable, Dict
 import tensorflow as tf
-from Recommender_System.utility.evaluation import TopkData, topk_evaluate
+from Recommender_System.algorithm.common import log, topk
+from Recommender_System.utility.evaluation import TopkData
 from Recommender_System.utility.decorator import logger
 
 
@@ -16,29 +17,6 @@ def _prepare_ds(train_data: List[Tuple[int, int, int]], test_data: List[Tuple[in
     test_ds = tf.data.Dataset.from_tensor_slices(xy(test_data)).batch(batch)
 
     return train_ds, test_ds
-
-
-def log(epoch, train_loss, train_auc, train_precision, train_recall, test_loss, test_auc, test_precision, test_recall):
-    print('epoch=%d, train_loss=%.5f, train_auc=%.5f, train_f1=%.5f, test_loss=%.5f, test_auc=%.5f, test_f1=%.5f' %
-          (epoch + 1, train_loss, train_auc, 2. * train_precision * train_recall / (train_precision + train_recall),
-           test_loss, test_auc, 2. * test_precision * test_recall / (test_precision + test_recall)))
-
-
-def topk(topk_data: TopkData, score_fn: Callable[[Dict[str, List[int]]], List[float]]):
-    ks = [10, 36, 100]
-    precisions, recalls = topk_evaluate(topk_data, score_fn, ks)
-    for k, precision, recall in zip(ks, precisions, recalls):
-        print('[k=%d, precision=%.3f%%, recall=%.3f%%, f1=%.3f%%]' %
-              (k, 100 * precision, 100 * recall, 200 * precision * recall / (precision + recall)), end='')
-    print()
-
-
-def get_score_fn(model):
-    @tf.function(experimental_relax_shapes=True)
-    def _fast_model(ui):
-        return tf.squeeze(model(ui))
-
-    return lambda ui: _fast_model({k: tf.constant(v, dtype=tf.int32) for k, v in ui.items()}).numpy()
 
 
 def _evaluate(model, dataset, loss_object, mean_metric=tf.keras.metrics.Mean(), auc_metric=tf.keras.metrics.AUC(),
@@ -88,6 +66,12 @@ def _train_graph(model, train_ds, test_ds, topk_data, optimizer, loss_object, ep
     train_model()
 
 
+def _train_eager(model, train_ds, test_ds, topk_data, optimizer, loss_object, epochs):
+    model.compile(optimizer=optimizer, loss=loss_object, metrics=['AUC', 'Precision', 'Recall'])
+    model.fit(train_ds, epochs=epochs, verbose=0, validation_data=test_ds,
+              callbacks=[RsCallback(topk_data, get_score_fn(model))])
+
+
 class RsCallback(tf.keras.callbacks.Callback):
     def __init__(self, topk_data: TopkData, score_fn: Callable[[Dict[str, List[int]]], List[float]]):
         super(RsCallback, self).__init__()
@@ -99,12 +83,6 @@ class RsCallback(tf.keras.callbacks.Callback):
             logs['val_loss'], logs['val_AUC'], logs['val_Precision'], logs['val_Recall'])
 
         topk(self.topk_data, self.score_fn)
-
-
-def _train_eager(model, train_ds, test_ds, topk_data, optimizer, loss_object, epochs):
-    model.compile(optimizer=optimizer, loss=loss_object, metrics=['AUC', 'Precision', 'Recall'])
-    model.fit(train_ds, epochs=epochs, verbose=0, validation_data=test_ds,
-              callbacks=[RsCallback(topk_data, get_score_fn(model))])
 
 
 @logger('开始训练，', ('epochs', 'batch', 'execution'))
@@ -154,3 +132,11 @@ def test(model: tf.keras.Model, train_data: List[Tuple[int, int, int]], test_dat
     test_loss, test_auc, test_precision, test_recall = _evaluate(model, test_ds, loss_object)
     log(-1, train_loss, train_auc, train_precision, train_recall, test_loss, test_auc, test_precision, test_recall)
     topk(topk_data, get_score_fn(model))
+
+
+def get_score_fn(model):
+    @tf.function(experimental_relax_shapes=True)
+    def _fast_model(ui):
+        return tf.squeeze(model(ui))
+
+    return lambda ui: _fast_model({k: tf.constant(v, dtype=tf.int32) for k, v in ui.items()}).numpy()

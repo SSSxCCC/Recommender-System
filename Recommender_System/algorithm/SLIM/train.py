@@ -1,5 +1,5 @@
 import tensorflow as tf
-from Recommender_System.algorithm.train import topk
+from Recommender_System.algorithm.common import topk
 from Recommender_System.algorithm.SLIM.model import SLIM
 from Recommender_System.utility.evaluation import TopkData
 from Recommender_System.utility.decorator import logger

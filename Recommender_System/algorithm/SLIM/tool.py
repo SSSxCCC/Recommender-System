@@ -1,5 +1,4 @@
 from typing import List, Tuple
-
 from Recommender_System.utility.decorator import logger
 
 

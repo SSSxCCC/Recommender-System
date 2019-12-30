@@ -1,6 +1,5 @@
 from typing import List
 import tensorflow as tf
-from tensorflow.keras.regularizers import l2 as reg_l2
 from Recommender_System.algorithm.KGCN.layer import SumAggregator
 from Recommender_System.algorithm.KGNNLS.layer import LabelAggregator, HashLookupWrapper
 from Recommender_System.utility.decorator import logger
@@ -10,13 +9,14 @@ from Recommender_System.utility.decorator import logger
 def KGNNLS_model(n_user: int, n_entity: int, n_relation: int, adj_entity: List[List[int]], adj_relation: List[List[int]],
                  interaction_table: tf.lookup.StaticHashTable, neighbor_size: int, iter_size=2, dim=16, l2=1e-7) -> tf.keras.Model:
     assert neighbor_size == len(adj_entity[0]) == len(adj_relation[0])
+    l2 = tf.keras.regularizers.l2(l2)
 
     user_id = tf.keras.Input(shape=(), name='user_id', dtype=tf.int32)
     item_id = tf.keras.Input(shape=(), name='item_id', dtype=tf.int32)
 
-    user_embedding = tf.keras.layers.Embedding(n_user, dim, embeddings_initializer='glorot_uniform', embeddings_regularizer=reg_l2(l2))
-    entity_embedding = tf.keras.layers.Embedding(n_entity, dim, embeddings_initializer='glorot_uniform', embeddings_regularizer=reg_l2(l2))
-    relation_embedding = tf.keras.layers.Embedding(n_relation, dim, embeddings_initializer='glorot_uniform', embeddings_regularizer=reg_l2(l2))
+    user_embedding = tf.keras.layers.Embedding(n_user, dim, embeddings_initializer='glorot_uniform', embeddings_regularizer=l2)
+    entity_embedding = tf.keras.layers.Embedding(n_entity, dim, embeddings_initializer='glorot_uniform', embeddings_regularizer=l2)
+    relation_embedding = tf.keras.layers.Embedding(n_relation, dim, embeddings_initializer='glorot_uniform', embeddings_regularizer=l2)
 
     u = user_embedding(user_id)
 
@@ -32,7 +32,7 @@ def KGNNLS_model(n_user: int, n_entity: int, n_relation: int, adj_entity: List[L
     entity_vectors = [entity_embedding(entity) for entity in entities]  # [(batch, 1, dim), (batch, n_neighbor, dim), (batch, n_neighbor^2, dim), ..., (batch, n_neighbor^n_iter, dim)]
     relation_vectors = [relation_embedding(relation) for relation in relations]  # [(batch, n_neighbor, dim), (batch, n_neighbor^2, dim), ..., (batch, n_neighbor^n_iter, dim)]
     for it in range(iter_size):
-        aggregator = SumAggregator(activation='relu' if it < iter_size - 1 else 'tanh', kernel_regularizer=reg_l2(l2))
+        aggregator = SumAggregator(activation='relu' if it < iter_size - 1 else 'tanh', kernel_regularizer=l2)
         entities_next = []
         for hop in range(iter_size - it):
             inputs = (entity_vectors[hop], entity_vectors[hop + 1], relation_vectors[hop], u)

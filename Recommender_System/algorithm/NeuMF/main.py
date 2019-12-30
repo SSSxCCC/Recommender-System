@@ -8,5 +8,5 @@ if __name__ == '__main__':
     gmf_dim, mlp_dim, layers, l2 = 8, 32, [32, 16, 8], 0
 
     train_with_pretrain(n_user, n_item, train_data, test_data, topk_data, gmf_dim, mlp_dim, layers, l2)
-    print('---------------------------------------------------------------')
+    print('---------------------------------------------------------------------------------------------')
     train_without_pretrain(n_user, n_item, train_data, test_data, topk_data, gmf_dim, mlp_dim, layers, l2)

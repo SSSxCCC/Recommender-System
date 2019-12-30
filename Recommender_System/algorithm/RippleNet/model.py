@@ -1,5 +1,4 @@
 import tensorflow as tf
-from tensorflow.keras.regularizers import l2 as reg_l2
 from Recommender_System.algorithm.RippleNet.layer import Embedding2D
 from Recommender_System.utility.decorator import logger
 
@@ -7,6 +6,8 @@ from Recommender_System.utility.decorator import logger
 @logger('初始化RippleNet模型：', ('n_entity', 'n_relation', 'dim', 'hop_size', 'ripple_size', 'kge_weight', 'l2'))
 def RippleNet_model(n_entity: int, n_relation: int, dim=16, hop_size=2, ripple_size=32, kge_weight=0.01, l2=1e-7,
                     item_update_mode='plus_transform', use_all_hops=True) -> tf.keras.Model:
+    l2 = tf.keras.regularizers.l2(l2)
+
     item_id = tf.keras.Input(shape=(), name='item_id', dtype=tf.int32)
     ripple_h, ripple_r, ripple_t = [], [], []
     for hop in range(hop_size):
@@ -14,9 +15,9 @@ def RippleNet_model(n_entity: int, n_relation: int, dim=16, hop_size=2, ripple_s
         ripple_r.append(tf.keras.Input(shape=(ripple_size,), name='ripple_r_' + str(hop), dtype=tf.int32))
         ripple_t.append(tf.keras.Input(shape=(ripple_size,), name='ripple_t_' + str(hop), dtype=tf.int32))
 
-    entity_embedding = tf.keras.layers.Embedding(n_entity, dim, embeddings_initializer='glorot_uniform', embeddings_regularizer=reg_l2(l2))
-    relation_embedding = Embedding2D(n_relation, dim, dim, embeddings_initializer='glorot_uniform', embeddings_regularizer=reg_l2(l2))
-    transform_matrix = tf.keras.layers.Dense(dim, use_bias=False, kernel_initializer='glorot_uniform', kernel_regularizer=reg_l2(l2))
+    entity_embedding = tf.keras.layers.Embedding(n_entity, dim, embeddings_initializer='glorot_uniform', embeddings_regularizer=l2)
+    relation_embedding = Embedding2D(n_relation, dim, dim, embeddings_initializer='glorot_uniform', embeddings_regularizer=l2)
+    transform_matrix = tf.keras.layers.Dense(dim, use_bias=False, kernel_initializer='glorot_uniform', kernel_regularizer=l2)
 
     i = entity_embedding(item_id)  # batch, dim
     h, r, t = [], [], []
@@ -67,7 +68,7 @@ def RippleNet_model(n_entity: int, n_relation: int, dim=16, hop_size=2, ripple_s
         l2_loss += tf.reduce_sum(tf.square(h[hop]))
         l2_loss += tf.reduce_sum(tf.square(r[hop]))
         l2_loss += tf.reduce_sum(tf.square(t[hop]))
-    l2_loss = tf.keras.layers.Layer(name='l2_loss')(l2 * l2_loss)
+    l2_loss = tf.keras.layers.Layer(name='l2_loss')(l2.l2 * l2_loss)
 
     return tf.keras.Model(inputs=[item_id] + ripple_h + ripple_r + ripple_t, outputs=[score, kge_loss, l2_loss])
 

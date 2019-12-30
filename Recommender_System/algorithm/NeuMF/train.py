@@ -5,7 +5,9 @@ import tensorflow as tf
 
 def train_with_pretrain(n_user, n_item, train_data, test_data, topk_data, gmf_dim, mlp_dim, layers, l2):
     neumf_model, gmf_model, mlp_model = NeuMF_model(n_user, n_item, gmf_dim=gmf_dim, mlp_dim=mlp_dim, layers=layers, l2=l2)
+    print('预训练GMF部分')
     train(gmf_model, train_data, test_data, topk_data, epochs=10, batch=512)
+    print('预训练MLP部分')
     train(mlp_model, train_data, test_data, topk_data, epochs=10, batch=512)
 
     out_kernel = tf.concat((gmf_model.get_layer('gmf_out').get_weights()[0], mlp_model.get_layer('mlp_out').get_weights()[0]), 0)
