@@ -11,4 +11,5 @@ def get_interaction_table(train_data, n_entity) -> tf.lookup.StaticHashTable:
     interaction_table = tf.lookup.StaticHashTable(
         tf.lookup.KeyValueTensorInitializer(keys, values, key_dtype=tf.int64, value_dtype=tf.keras.backend.floatx()),
         default_value=0.5)
+
     return interaction_table

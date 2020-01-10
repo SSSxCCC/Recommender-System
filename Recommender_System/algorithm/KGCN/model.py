@@ -39,8 +39,8 @@ def KGCN_model(n_user: int, n_entity: int, n_relation: int, adj_entity: List[Lis
             entities_next.append(vector)
         entity_vectors = entities_next
     i = flatten(entity_vectors[0])  # batch, dim
-
     score = tf.sigmoid(tf.reduce_sum(u * i, axis=1))
+
     return tf.keras.Model(inputs=[user_id, item_id], outputs=score)
 
 

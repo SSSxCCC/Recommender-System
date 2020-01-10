@@ -5,9 +5,10 @@ from Recommender_System.algorithm.KGNNLS.layer import LabelAggregator, HashLooku
 from Recommender_System.utility.decorator import logger
 
 
-@logger('初始化KGNNLS模型：', ('n_user', 'n_entity', 'n_relation', 'neighbor_size', 'iter_size', 'dim', 'l2'))
+@logger('初始化KGNNLS模型：', ('n_user', 'n_entity', 'n_relation', 'neighbor_size', 'iter_size', 'dim', 'l2', 'ls'))
 def KGNNLS_model(n_user: int, n_entity: int, n_relation: int, adj_entity: List[List[int]], adj_relation: List[List[int]],
-                 interaction_table: tf.lookup.StaticHashTable, neighbor_size: int, iter_size=2, dim=16, l2=1e-7) -> tf.keras.Model:
+                 interaction_table: tf.lookup.StaticHashTable, neighbor_size: int, iter_size=2, dim=16, l2=1e-7, ls=1.)\
+        -> tf.keras.Model:
     assert neighbor_size == len(adj_entity[0]) == len(adj_relation[0])
     l2 = tf.keras.regularizers.l2(l2)
 
@@ -40,7 +41,7 @@ def KGNNLS_model(n_user: int, n_entity: int, n_relation: int, adj_entity: List[L
             entities_next.append(vector)
         entity_vectors = entities_next
     i = flatten(entity_vectors[0])  # batch, dim
-    score = tf.sigmoid(tf.reduce_sum(u * i, axis=1))
+    score = tf.sigmoid(tf.reduce_sum(u * i, axis=1))  # batch
 
     # calculate initial labels; calculate updating masks for label propagation
     entity_labels = []
@@ -77,9 +78,15 @@ def KGNNLS_model(n_user: int, n_entity: int, n_relation: int, adj_entity: List[L
             entity_labels_next.append(vector)
         entity_labels = entity_labels_next
 
-    predicted_labels = tf.squeeze(entity_labels[0], axis=-1)
+    predicted_labels = tf.squeeze(entity_labels[0], axis=-1)  # batch
 
-    return tf.keras.Model(inputs=[user_id, item_id], outputs=[score, predicted_labels])
+    label_keys = tf.cast(user_id, dtype=tf.int64) * offset + tf.cast(item_id, dtype=tf.int64)  # batch
+    labels = interaction_table_lookup(label_keys)  # batch
+    ls_loss = tf.keras.losses.binary_crossentropy(labels, predicted_labels)
+
+    model = tf.keras.Model(inputs=[user_id, item_id], outputs=score)
+    model.add_loss(ls_loss * ls)
+    return model
 
 
 if __name__ == '__main__':

@@ -3,28 +3,26 @@ from Recommender_System.algorithm.RippleNet.layer import Embedding2D
 from Recommender_System.utility.decorator import logger
 
 
-@logger('初始化RippleNet模型：', ('n_entity', 'n_relation', 'dim', 'hop_size', 'ripple_size', 'kge_weight', 'l2'))
-def RippleNet_model(n_entity: int, n_relation: int, dim=16, hop_size=2, ripple_size=32, kge_weight=0.01, l2=1e-7,
-                    item_update_mode='plus_transform', use_all_hops=True) -> tf.keras.Model:
+@logger('初始化RippleNet模型：', ('n_entity', 'n_relation', 'hop_size', 'ripple_size', 'dim', 'kge_weight', 'l2'))
+def RippleNet_model(n_entity: int, n_relation: int, ripple_set: list, hop_size=2, ripple_size=32, dim=16,
+                    kge_weight=0.01, l2=1e-7, item_update_mode='plus_transform', use_all_hops=True) -> tf.keras.Model:
+    assert len(ripple_set[0]) == hop_size and len(ripple_set[0][0][0]) == ripple_size
     l2 = tf.keras.regularizers.l2(l2)
 
+    user_id = tf.keras.Input(shape=(), name='user_id', dtype=tf.int32)
     item_id = tf.keras.Input(shape=(), name='item_id', dtype=tf.int32)
-    ripple_h, ripple_r, ripple_t = [], [], []
-    for hop in range(hop_size):
-        ripple_h.append(tf.keras.Input(shape=(ripple_size,), name='ripple_h_' + str(hop), dtype=tf.int32))
-        ripple_r.append(tf.keras.Input(shape=(ripple_size,), name='ripple_r_' + str(hop), dtype=tf.int32))
-        ripple_t.append(tf.keras.Input(shape=(ripple_size,), name='ripple_t_' + str(hop), dtype=tf.int32))
 
     entity_embedding = tf.keras.layers.Embedding(n_entity, dim, embeddings_initializer='glorot_uniform', embeddings_regularizer=l2)
     relation_embedding = Embedding2D(n_relation, dim, dim, embeddings_initializer='glorot_uniform', embeddings_regularizer=l2)
     transform_matrix = tf.keras.layers.Dense(dim, use_bias=False, kernel_initializer='glorot_uniform', kernel_regularizer=l2)
 
     i = entity_embedding(item_id)  # batch, dim
+    ripple_sets = tf.gather(ripple_set, user_id)  # batch, hop_size, hrt, ripple_size
     h, r, t = [], [], []
     for hop in range(hop_size):
-        h.append(entity_embedding(ripple_h[hop]))  # batch, ripple_size, dim
-        r.append(relation_embedding(ripple_r[hop]))  # batch, ripple_size, dim, dim
-        t.append(entity_embedding(ripple_t[hop]))  # batch, ripple_size, dim
+        h.append(entity_embedding(ripple_sets[:, hop, 0]))  # batch, ripple_size, dim
+        r.append(relation_embedding(ripple_sets[:, hop, 1]))  # batch, ripple_size, dim, dim
+        t.append(entity_embedding(ripple_sets[:, hop, 2]))  # batch, ripple_size, dim
 
     def update_item(i, o):
         if item_update_mode == 'replace':
@@ -61,16 +59,17 @@ def RippleNet_model(n_entity: int, n_relation: int, dim=16, hop_size=2, ripple_s
         t_expanded = tf.expand_dims(t[hop], axis=3)  # batch, ripple_size, dim, 1
         hRt = tf.squeeze(h_expanded @ r[hop] @ t_expanded)  # batch, ripple_size
         kge_loss += tf.reduce_mean(tf.sigmoid(hRt))
-    kge_loss = tf.keras.layers.Layer(name='kge_loss')(kge_weight * -kge_loss)
 
     l2_loss = 0  # tf.reduce_sum(tf.square(transform_matrix.kernel)) if item_update_mode in {'replace_transform', 'plus_transform'} else 0
     for hop in range(hop_size):
         l2_loss += tf.reduce_sum(tf.square(h[hop]))
         l2_loss += tf.reduce_sum(tf.square(r[hop]))
         l2_loss += tf.reduce_sum(tf.square(t[hop]))
-    l2_loss = tf.keras.layers.Layer(name='l2_loss')(l2.l2 * l2_loss)
 
-    return tf.keras.Model(inputs=[item_id] + ripple_h + ripple_r + ripple_t, outputs=[score, kge_loss, l2_loss])
+    model = tf.keras.Model(inputs=[user_id, item_id], outputs=score)
+    model.add_loss(l2.l2 * l2_loss)  # 额外的l2正则项
+    model.add_loss(kge_weight * -kge_loss)  # 知识图谱嵌入损失项
+    return model
 
 
 if __name__ == '__main__':

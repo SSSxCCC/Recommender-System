@@ -6,7 +6,7 @@ if __name__ == '__main__':
     from Recommender_System.data import kg_loader, data_process
     import tensorflow as tf
 
-    n_user, n_item, n_entity, n_relation, train_data, test_data, kg, topk_data = data_process.pack_kg(kg_loader.ml1m_kg_RippleNet)
+    n_user, n_item, n_entity, n_relation, train_data, test_data, kg, topk_data = data_process.pack_kg(kg_loader.ml1m_kg1m, negative_sample_threshold=4)
 
     neighbor_size = 16
     adj_entity, adj_relation = get_adj_list(construct_undirected_kg(kg), n_entity, neighbor_size)

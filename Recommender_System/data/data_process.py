@@ -1,67 +1,46 @@
+import os
 import random
 import numpy as np
-from typing import Tuple, Dict, List, Callable
+from typing import Tuple, List, Callable
 from collections import defaultdict
-from concurrent.futures import ProcessPoolExecutor
 from Recommender_System.utility.evaluation import TopkData
 from Recommender_System.utility.decorator import logger
 
 
-def _negative_sample_init(_item_set, _ratio, _negative_sample_weight):  # 用于子进程初始化全局变量
-    global item_set, ratio, negative_sample_weight
-    item_set, ratio, negative_sample_weight = _item_set,  _ratio, _negative_sample_weight
-
-
-def _negative_sample(positive_set, unpositive_set):  # 对单个用户进行负采样
-    valid_negative_list = list(item_set - positive_set - unpositive_set)  # 可以取负样例的物品id列表
-    n_negative_sample = min(int(len(positive_set) * ratio), len(valid_negative_list))  # 采集负样例数量
-    if n_negative_sample <= 0:
-        return []
-
-    sum_weight = sum([negative_sample_weight[item_id] for item_id in valid_negative_list])
-    weights = [negative_sample_weight[item_id] / sum_weight for item_id in valid_negative_list]  # 负样本采集权重
-
-    return np.random.choice(valid_negative_list, n_negative_sample, False, weights)  # 采集n_negative_sample个负样例
-
-
 @logger('开始采集负样本，', ('ratio', 'threshold', 'method'))
-def negative_sample(data: List[tuple], ratio=1, threshold=0, method='random') -> List[Tuple[int, int, int]]:
+def negative_sample(data: List[tuple], ratio=1, threshold=0, method='random') -> List[tuple]:
     """
     采集负样本
     保证了每个用户都有正样本，但是不保证每个物品都有正样本，可能会减少用户数量和物品数量
 
-    :param data: 原数据，第一列是用户id，第二列是物品id，第三列是权重
+    :param data: 原数据，至少有三列，第一列是用户id，第二列是物品id，第三列是权重
     :param ratio: 负正样本比例
     :param threshold: 权重阈值，权重大于或者等于此值为正样例，小于此值既不是正样例也不是负样例
     :param method: 采集方式，random是均匀随机采集，popular是按流行度随机采集
     :return: 带上负样本的数据集
     """
     # 负样本采集权重
-    item_set = {d[1] for d in data}
     if method == 'random':
-        negative_sample_weight = {item_id: 1 for item_id in item_set}
+        negative_sample_weight = {d[1]: 1 for d in data}
     elif method == 'popular':
-        negative_sample_weight = {item_id: 0 for item_id in item_set}
+        negative_sample_weight = {d[1]: 0 for d in data}
         for d in data:
             negative_sample_weight[d[1]] += 1
     else:
         raise ValueError("参数method必须是'random'或'popular'")
 
     # 得到每个用户正样本与非正样本集合
-    user_positive_set = defaultdict(set)
-    user_unpositive_set = defaultdict(set)
+    user_positive_set, user_unpositive_set = defaultdict(set), defaultdict(set)
     for d in data:
         user_id, item_id, weight = d[0], d[1], d[2]
-        if weight >= threshold:
-            user_positive_set[user_id].add(item_id)
-        else:
-            user_unpositive_set[user_id].add(item_id)
+        (user_positive_set if weight >= threshold else user_unpositive_set)[user_id].add(item_id)
 
-    # 为每个用户采集负样例
+    # 仅为有正样例的用户采集负样例
     user_list = list(user_positive_set.keys())
     arg_positive_set = [user_positive_set[user_id] for user_id in user_list]
     arg_unpositive_set = [user_unpositive_set[user_id] for user_id in user_list]
-    with ProcessPoolExecutor(initializer=_negative_sample_init, initargs=(item_set, ratio, negative_sample_weight)) as executor:
+    from concurrent.futures import ProcessPoolExecutor
+    with ProcessPoolExecutor(max_workers=os.cpu_count()//2, initializer=_negative_sample_init, initargs=(ratio, negative_sample_weight)) as executor:
         sampled_negative_items = executor.map(_negative_sample, arg_positive_set, arg_unpositive_set, chunksize=100)
 
     # 构建新的数据集
@@ -73,12 +52,31 @@ def negative_sample(data: List[tuple], ratio=1, threshold=0, method='random') ->
     return new_data
 
 
+def _negative_sample_init(_ratio, _negative_sample_weight):  # 用于子进程初始化全局变量
+    global item_set, ratio, negative_sample_weight
+    item_set, ratio, negative_sample_weight = set(_negative_sample_weight.keys()),  _ratio, _negative_sample_weight
+
+
+def _negative_sample(positive_set, unpositive_set):  # 对单个用户进行负采样
+    valid_negative_list = list(item_set - positive_set - unpositive_set)  # 可以取负样例的物品id列表
+    n_negative_sample = min(int(len(positive_set) * ratio), len(valid_negative_list))  # 采集负样例数量
+    if n_negative_sample <= 0:
+        return []
+
+    weights = np.array([negative_sample_weight[item_id] for item_id in valid_negative_list], dtype=np.float)
+    weights /= weights.sum()  # 负样本采集权重
+
+    # 采集n_negative_sample个负样例（通过下标采样是为了防止物品id类型从int或str变成np.int或np.str）
+    sample_indices = np.random.choice(range(len(valid_negative_list)), n_negative_sample, False, weights)
+    return [valid_negative_list[i] for i in sample_indices]
+
+
 @logger('开始进行id规整化')
-def neaten_id(data: List[Tuple[int, int, int]]) -> Tuple[List[Tuple[int, int, int]], int, int, Dict[int, int], Dict[int, int]]:
+def neaten_id(data: List[tuple]) -> Tuple[List[Tuple[int, int, int]], int, int, dict, dict]:
     """
     对数据的用户id和物品id进行规整化，使其id变为从0开始到数量减1
 
-    :param data: 原数据，第一列是用户id，第二列是物品id，第三列是标签
+    :param data: 原数据，有三列，第一列是用户id，第二列是物品id，第三列是标签
     :return: 新数据，用户数量，物品数量，用户id旧到新映射，物品id旧到新映射
     """
     new_data = []
@@ -187,20 +185,28 @@ def pack(data_loader_fn: Callable[[], List[tuple]],
     return n_user, n_item, train_data, test_data, topk_data
 
 
-def pack_kg(kg_loader_fn: Callable[[], Tuple[List[Tuple[int, int, int]], List[Tuple[int, int, int]], int, int, int, int]],
-            split_test_ratio=0.4, shuffle_before_split=True, split_ensure_positive=False, topk_sample_user=100) -> Tuple[
-            int, int, int, int, List[Tuple[int, int, int]], List[Tuple[int, int, int]], List[Tuple[int, int, int]], TopkData]:
+def pack_kg(kg_loader_config: Tuple[str, Callable[[], List[tuple]], type], keep_all_head=True,
+            negative_sample_ratio=1, negative_sample_threshold=0, negative_sample_method='random',
+            split_test_ratio=0.4, shuffle_before_split=True, split_ensure_positive=False,
+            topk_sample_user=100) -> Tuple[int, int, int, int, List[Tuple[int, int, int]],
+                                           List[Tuple[int, int, int]], List[Tuple[int, int, int]], TopkData]:
     """
     联合读数据和知识图谱，训练集测试集切分，准备TopK评估数据
 
-    :param kg_loader_fn: kg_loader里面的读数据函数
+    :param kg_loader_config: kg_loader里面的读知识图谱配置
+    :param keep_all_head: 若为False，则读取知识图谱结构时，删除头实体在数据集里面没有对应物品的三元组
+    :param negative_sample_ratio: 负正样本比例，为0代表不采样
+    :param negative_sample_threshold: 负采样的权重阈值，权重大于或者等于此值为正样例，小于此值既不是正样例也不是负样例
+    :param negative_sample_method: 负采样方法，值为'random'或'popular'
     :param split_test_ratio: 切分时测试集占比，这个值在0和1之间
     :param shuffle_before_split: 切分前是否对数据集随机顺序
     :param split_ensure_positive: 切分时是否确保训练集每个用户都有正样例
     :param topk_sample_user: 用来计算TopK指标时用户采样数量，为None则表示采样所有用户
     :return: 用户数量，物品数量，实体数量，关系数量，训练集，测试集，知识图谱，用于TopK评估数据
     """
-    data, kg, n_user, n_item, n_entity, n_relation = kg_loader_fn()
+    from Recommender_System.data.kg_loader import _read_data_with_kg
+    data, kg, n_user, n_item, n_entity, n_relation = _read_data_with_kg(
+        kg_loader_config, negative_sample_ratio, negative_sample_threshold, negative_sample_method, keep_all_head)
     train_data, test_data = split(data, split_test_ratio, shuffle_before_split, split_ensure_positive)
     topk_data = prepare_topk(train_data, test_data, n_user, n_item, topk_sample_user)
     return n_user, n_item, n_entity, n_relation, train_data, test_data, kg, topk_data

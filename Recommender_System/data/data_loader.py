@@ -44,6 +44,16 @@ def _read_lastfm() -> List[Tuple[int, int, int]]:
     return data
 
 
+def _read_book_crossing() -> List[Tuple[int, str, int]]:
+    data = []
+    with open(os.path.join(ds_path, 'Book-Crossing/BX-Book-Ratings.csv'), 'r', encoding='utf-8') as f:
+        for line in f.readlines()[1:]:
+            values = line.strip().split(';')
+            user_id, book_id, rating = int(values[0][1:-1]), values[1][1:-1], int(values[2][1:-1])
+            data.append((user_id, book_id, rating))
+    return data
+
+
 @logger('开始读数据，', ('data_name', 'expect_length', 'expect_user', 'expect_item'))
 def _load_data(read_data_fn: Callable[[], List[tuple]], expect_length: int, expect_user: int, expect_item: int,
                data_name: str) -> List[tuple]:
@@ -71,6 +81,10 @@ def lastfm() -> List[Tuple[int, int, int]]:
     return _load_data(_read_lastfm, 92834, 1892, 17632, 'lastfm')
 
 
+def book_crossing() -> List[Tuple[int, str, int]]:
+    return _load_data(_read_book_crossing, 1149780, 105283, 340555, 'Book-Crossing')
+
+
 # 测试数据读的是否正确
 if __name__ == '__main__':
-    data = ml1m()
+    data = book_crossing()

@@ -5,12 +5,12 @@ from Recommender_System.utility.evaluation import TopkData
 from Recommender_System.utility.decorator import logger
 
 
-def _prepare_ds(train_data: List[Tuple[int, int, int]], test_data: List[Tuple[int, int, int]],
-                batch: int) -> Tuple[tf.data.Dataset, tf.data.Dataset]:
+def prepare_ds(train_data: List[Tuple[int, int, int]], test_data: List[Tuple[int, int, int]],
+               batch: int) -> Tuple[tf.data.Dataset, tf.data.Dataset]:
     def xy(data):
         user_ids = tf.constant([d[0] for d in data], dtype=tf.int32)
         item_ids = tf.constant([d[1] for d in data], dtype=tf.int32)
-        labels = tf.constant([d[2] for d in data], dtype=tf.float32)
+        labels = tf.constant([d[2] for d in data], dtype=tf.keras.backend.floatx())
         return {'user_id': user_ids, 'item_id': item_ids}, labels
 
     train_ds = tf.data.Dataset.from_tensor_slices(xy(train_data)).shuffle(len(train_data)).batch(batch)
@@ -42,28 +42,25 @@ def _evaluate(model, dataset, loss_object, mean_metric=tf.keras.metrics.Mean(), 
 
 
 def _train_graph(model, train_ds, test_ds, topk_data, optimizer, loss_object, epochs):
-    def train_model():
-        @tf.function
-        def train_batch(ui, label):
-            with tf.GradientTape() as tape:
-                score = tf.squeeze(model(ui, training=True))
-                loss = loss_object(label, score) + sum(model.losses)
-            gradients = tape.gradient(loss, model.trainable_variables)
-            optimizer.apply_gradients(zip(gradients, model.trainable_variables))
-
-        for epoch in tf.range(epochs):
-            for ui, label in train_ds:
-                train_batch(ui, label)
-
-            train_loss, train_auc, train_precision, train_recall = _evaluate(model, train_ds, loss_object)
-            test_loss, test_auc, test_precision, test_recall = _evaluate(model, test_ds, loss_object)
-
-            tf.py_function(log, [epoch, train_loss, train_auc, train_precision, train_recall,
-                                 test_loss, test_auc, test_precision, test_recall], [])
-            tf.py_function(lambda: topk(topk_data, score_fn), [], [])
-
     score_fn = get_score_fn(model)
-    train_model()
+
+    @tf.function
+    def train_batch(ui, label):
+        with tf.GradientTape() as tape:
+            score = tf.squeeze(model(ui, training=True))
+            loss = loss_object(label, score) + sum(model.losses)
+        gradients = tape.gradient(loss, model.trainable_variables)
+        optimizer.apply_gradients(zip(gradients, model.trainable_variables))
+
+    for epoch in range(epochs):
+        for ui, label in train_ds:
+            train_batch(ui, label)
+
+        train_loss, train_auc, train_precision, train_recall = _evaluate(model, train_ds, loss_object)
+        test_loss, test_auc, test_precision, test_recall = _evaluate(model, test_ds, loss_object)
+
+        log(epoch, train_loss, train_auc, train_precision, train_recall, test_loss, test_auc, test_precision, test_recall)
+        topk(topk_data, score_fn)
 
 
 def _train_eager(model, train_ds, test_ds, topk_data, optimizer, loss_object, epochs):
@@ -106,7 +103,7 @@ def train(model: tf.keras.Model, train_data: List[Tuple[int, int, int]], test_da
     if loss_object is None:
         loss_object = tf.keras.losses.BinaryCrossentropy()
 
-    train_ds, test_ds = _prepare_ds(train_data, test_data, batch)
+    train_ds, test_ds = prepare_ds(train_data, test_data, batch)
     train_fn = _train_eager if execution == 'eager' else _train_graph
     train_fn(model, train_ds, test_ds, topk_data, optimizer, loss_object, epochs)
 
@@ -127,7 +124,7 @@ def test(model: tf.keras.Model, train_data: List[Tuple[int, int, int]], test_dat
     if loss_object is None:
         loss_object = tf.keras.losses.BinaryCrossentropy()
 
-    train_ds, test_ds = _prepare_ds(train_data, test_data, batch)
+    train_ds, test_ds = prepare_ds(train_data, test_data, batch)
     train_loss, train_auc, train_precision, train_recall = _evaluate(model, train_ds, loss_object)
     test_loss, test_auc, test_precision, test_recall = _evaluate(model, test_ds, loss_object)
     log(-1, train_loss, train_auc, train_precision, train_recall, test_loss, test_auc, test_precision, test_recall)
@@ -139,4 +136,8 @@ def get_score_fn(model):
     def _fast_model(ui):
         return tf.squeeze(model(ui))
 
-    return lambda ui: _fast_model({k: tf.constant(v, dtype=tf.int32) for k, v in ui.items()}).numpy()
+    def score_fn(ui):
+        ui = {k: tf.constant(v, dtype=tf.int32) for k, v in ui.items()}
+        return _fast_model(ui).numpy()
+
+    return score_fn
