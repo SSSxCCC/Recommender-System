@@ -1,14 +1,14 @@
 from typing import List
 import tensorflow as tf
-from Recommender_System.algorithm.KGCN.layer import SumAggregator
+from Recommender_System.algorithm.KGCN.layer import SumAggregator, ConcatAggregator, NeighborAggregator
 from Recommender_System.algorithm.KGNNLS.layer import LabelAggregator, HashLookupWrapper
 from Recommender_System.utility.decorator import logger
 
 
-@logger('初始化KGNNLS模型：', ('n_user', 'n_entity', 'n_relation', 'neighbor_size', 'iter_size', 'dim', 'l2', 'ls'))
+@logger('初始化KGNNLS模型：', ('n_user', 'n_entity', 'n_relation', 'neighbor_size', 'iter_size', 'dim', 'l2', 'ls', 'aggregator'))
 def KGNNLS_model(n_user: int, n_entity: int, n_relation: int, adj_entity: List[List[int]], adj_relation: List[List[int]],
-                 interaction_table: tf.lookup.StaticHashTable, neighbor_size: int, iter_size=2, dim=16, l2=1e-7, ls=1.)\
-        -> tf.keras.Model:
+                 interaction_table: tf.lookup.StaticHashTable, neighbor_size: int, iter_size=2, dim=16, l2=1e-7, ls=1.,
+                 aggregator='sum') -> tf.keras.Model:
     assert neighbor_size == len(adj_entity[0]) == len(adj_relation[0])
     l2 = tf.keras.regularizers.l2(l2)
 
@@ -30,17 +30,26 @@ def KGNNLS_model(n_user: int, n_entity: int, n_relation: int, adj_entity: List[L
         entities.append(neighbor_entities)
         relations.append(neighbor_relations)
 
+    if aggregator == 'sum':
+        aggregator_class = SumAggregator
+    elif aggregator == 'concat':
+        aggregator_class = ConcatAggregator
+    elif aggregator == 'neighbor':
+        aggregator_class = NeighborAggregator
+    else:
+        raise Exception("Unknown aggregator: " + aggregator)
+
     entity_vectors = [entity_embedding(entity) for entity in entities]  # [(batch, 1, dim), (batch, n_neighbor, dim), (batch, n_neighbor^2, dim), ..., (batch, n_neighbor^n_iter, dim)]
     relation_vectors = [relation_embedding(relation) for relation in relations]  # [(batch, n_neighbor, dim), (batch, n_neighbor^2, dim), ..., (batch, n_neighbor^n_iter, dim)]
     for it in range(iter_size):
-        aggregator = SumAggregator(activation='relu' if it < iter_size - 1 else 'tanh', kernel_regularizer=l2)
+        aggregator = aggregator_class(activation='relu' if it < iter_size - 1 else 'tanh', kernel_regularizer=l2)
         entities_next = []
         for hop in range(iter_size - it):
             inputs = (entity_vectors[hop], entity_vectors[hop + 1], relation_vectors[hop], u)
             vector = aggregator(inputs, neighbor_size=neighbor_size)
             entities_next.append(vector)
         entity_vectors = entities_next
-    i = flatten(entity_vectors[0])  # batch, dim
+    i = tf.reshape(entity_vectors[0], shape=(-1, dim))  # batch, dim
     score = tf.sigmoid(tf.reduce_sum(u * i, axis=1))  # batch
 
     # calculate initial labels; calculate updating masks for label propagation
@@ -77,8 +86,7 @@ def KGNNLS_model(n_user: int, n_entity: int, n_relation: int, adj_entity: List[L
             vector = aggregator(inputs, neighbor_size=neighbor_size)
             entity_labels_next.append(vector)
         entity_labels = entity_labels_next
-
-    predicted_labels = tf.squeeze(entity_labels[0], axis=-1)  # batch
+    predicted_labels = tf.squeeze(entity_labels[0], axis=1)  # batch
 
     label_keys = tf.cast(user_id, dtype=tf.int64) * offset + tf.cast(item_id, dtype=tf.int64)  # batch
     labels = interaction_table_lookup(label_keys)  # batch

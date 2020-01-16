@@ -15,6 +15,6 @@ if __name__ == '__main__':
     n_user, n_item, n_entity, n_relation, train_data, test_data, kg, topk_data = data_process.pack_kg(kg_loader.bx_kg150k, split_ensure_positive=True)
     hop_size, ripple_size = 2, 32
     ripple_set = get_ripple_set(n_user, hop_size, ripple_size, get_user_positive_item_list(train_data), construct_directed_kg(kg))
-    model = RippleNet_model(n_entity, n_relation, ripple_set, hop_size, ripple_size, dim=8, kge_weight=0.01, l2=1e-6)
-    train(model, train_data, test_data, topk_data, optimizer=tf.keras.optimizers.Adam(0.001), epochs=10, batch=1024)
+    model = RippleNet_model(n_entity, n_relation, ripple_set, hop_size, ripple_size, dim=32, kge_weight=0.01, l2=2e-5)
+    train(model, train_data, test_data, topk_data, optimizer=tf.keras.optimizers.Adam(0.001), epochs=10, batch=512)
     '''

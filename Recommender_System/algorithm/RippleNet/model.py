@@ -3,7 +3,7 @@ from Recommender_System.algorithm.RippleNet.layer import Embedding2D
 from Recommender_System.utility.decorator import logger
 
 
-@logger('初始化RippleNet模型：', ('n_entity', 'n_relation', 'hop_size', 'ripple_size', 'dim', 'kge_weight', 'l2'))
+@logger('初始化RippleNet模型：', ('n_entity', 'n_relation', 'hop_size', 'ripple_size', 'dim', 'kge_weight', 'l2', 'item_update_mode'))
 def RippleNet_model(n_entity: int, n_relation: int, ripple_set: list, hop_size=2, ripple_size=32, dim=16,
                     kge_weight=0.01, l2=1e-7, item_update_mode='plus_transform', use_all_hops=True) -> tf.keras.Model:
     assert len(ripple_set[0]) == hop_size and len(ripple_set[0][0][0]) == ripple_size
@@ -53,22 +53,22 @@ def RippleNet_model(n_entity: int, n_relation: int, ripple_set: list, hop_size=2
 
     score = tf.keras.layers.Activation('sigmoid', name='score')(tf.reduce_sum(i * u, axis=1))  # batch
 
-    kge_loss = 0
+    kge_loss = 0  # 知识图谱嵌入损失项
     for hop in range(hop_size):
         h_expanded = tf.expand_dims(h[hop], axis=2)  # batch, ripple_size, 1, dim
         t_expanded = tf.expand_dims(t[hop], axis=3)  # batch, ripple_size, dim, 1
         hRt = tf.squeeze(h_expanded @ r[hop] @ t_expanded)  # batch, ripple_size
         kge_loss += tf.reduce_mean(tf.sigmoid(hRt))
 
-    l2_loss = 0  # tf.reduce_sum(tf.square(transform_matrix.kernel)) if item_update_mode in {'replace_transform', 'plus_transform'} else 0
+    l2_loss = 0  # 额外的l2正则项，对RippleNet在ml1m数据集上的auc指标有明显提升
     for hop in range(hop_size):
         l2_loss += tf.reduce_sum(tf.square(h[hop]))
         l2_loss += tf.reduce_sum(tf.square(r[hop]))
         l2_loss += tf.reduce_sum(tf.square(t[hop]))
 
     model = tf.keras.Model(inputs=[user_id, item_id], outputs=score)
-    model.add_loss(l2.l2 * l2_loss)  # 额外的l2正则项
-    model.add_loss(kge_weight * -kge_loss)  # 知识图谱嵌入损失项
+    model.add_loss(l2.l2 * l2_loss)
+    model.add_loss(kge_weight * -kge_loss)
     return model
 
 

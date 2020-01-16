@@ -7,37 +7,9 @@ from Recommender_System.algorithm.train import prepare_ds, get_score_fn
 from Recommender_System.algorithm.common import log, topk
 
 
-def _get_score_fn(model):
-    @tf.function
-    def fast_model(ui):
-        return model(ui)
-
-    def get_score(ui, start, end, batch):
-        scores = []
-        for i in range(start, end, batch):
-            ui = {k: tf.constant(v[i:i+batch], dtype=tf.int32) for k, v in ui.items()}
-            scores.extend(fast_model(ui).numpy())
-        return scores
-
-    def score_fn(ui):
-        scores = []
-        end = length = len(ui['user_id'])
-        batch = 1
-        while length > 0:
-            step = length % 10
-            start = end - step * batch
-            scores = get_score(ui, start, end, batch) + scores
-            length //= 10
-            end = start
-            batch *= 10
-        return scores
-
-    return score_fn
-
-
 @logger('开始训练，', ('epochs', 'batch'))
 def train(model: tf.keras.Model, train_data: List[Tuple[int, int, int]], test_data: List[Tuple[int, int, int]],
-          topk_data: TopkData, optimizer=None, epochs=100, batch=512):
+          topk_data: TopkData = None, optimizer=None, epochs=100, batch=512):
     if optimizer is None:
         optimizer = tf.keras.optimizers.Adam()
 
@@ -48,7 +20,8 @@ def train(model: tf.keras.Model, train_data: List[Tuple[int, int, int]], test_da
     precision_metric = tf.keras.metrics.Precision()
     recall_metric = tf.keras.metrics.Recall()
     loss_object = tf.keras.losses.BinaryCrossentropy()
-    score_fn = _get_score_fn(model)
+    if topk_data:
+        score_fn = get_score_fn(model)
 
     def reset_metrics():
         for metric in [loss_mean_metric, auc_metric, precision_metric, recall_metric]:
@@ -92,5 +65,6 @@ def train(model: tf.keras.Model, train_data: List[Tuple[int, int, int]], test_da
         test_loss, test_auc, test_precision, test_recall = get_metric_results()
 
         log(epoch, train_loss, train_auc, train_precision, train_recall, test_loss, test_auc, test_precision, test_recall)
-        topk(topk_data, score_fn)
+        if topk_data:
+            topk(topk_data, score_fn)
         print('epoch_time=', time.time() - epoch_start_time, 's', sep='')
