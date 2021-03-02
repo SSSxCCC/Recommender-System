@@ -76,8 +76,8 @@ class RsCallback(tf.keras.callbacks.Callback):
         self.score_fn = score_fn
 
     def on_epoch_end(self, epoch, logs=None):
-        log(epoch, logs['loss'], logs['AUC'], logs['Precision'], logs['Recall'],
-            logs['val_loss'], logs['val_AUC'], logs['val_Precision'], logs['val_Recall'])
+        log(epoch, logs['loss'], logs['auc'], logs['precision'], logs['recall'],
+            logs['val_loss'], logs['val_auc'], logs['val_precision'], logs['val_recall'])
 
         topk(self.topk_data, self.score_fn)
 
