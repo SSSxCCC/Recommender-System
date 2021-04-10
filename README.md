@@ -11,15 +11,15 @@ Evaluation: ctr's auc f1 and topk's precision recall.
 ## Requirements
 
 * Python 3.8
-* Tensorflow 2.4.1
+* Tensorflow 2.3.2
 
 ## Run
 
-[Download data files](https://github.com/SSSxCCC/Recommender-System/tree/datafile) and put 'ds' and 'kg' under 'Recommender_System/data' folder.
-
-Open parent directory of current file as project in PyCharm, set up Python 3.8 interpreter and pip install tensorflow==2.4.1.
+Open parent directory of current file as project in PyCharm, set up Python 3.8 interpreter and pip install tensorflow==2.3.2.
 
 Go to Recommender_System/algorithm/xxx/main.py and run.
+
+MovieLens-20m is too large to upload. If you need it, [download](http://files.grouplens.org/datasets/movielens/ml-20m.zip) and put 'ml-20m' under 'Recommender_System/data/ds' folder.
 
 ---
 
@@ -36,12 +36,12 @@ Go to Recommender_System/algorithm/xxx/main.py and run.
 ## 需求
 
 * Python 3.8
-* Tensorflow 2.4.1
+* Tensorflow 2.3.2
 
 ## 运行
 
-[下载数据文件](https://github.com/SSSxCCC/Recommender-System/tree/datafile)并将文件夹'ds'和'kg'放到'Recommender_System/data'目录下。
-
-在PyCharm里面将此文件的父文件夹作为项目打开，设置好Python3.8的环境并使用pip安装tensorflow的2.4.1版本。
+在PyCharm里面将此文件的父文件夹作为项目打开，设置好Python3.8的环境并使用pip安装tensorflow的2.3.2版本。
 
 到Recommender_System/algorithm/xxx/main.py源码文件下并点击运行。
+
+MovieLens-20m数据集太大了因此不被包含在此项目文件中，如果你需要这个数据集，[下载MovieLens-20m](http://files.grouplens.org/datasets/movielens/ml-20m.zip)并将'ml-20m'文件夹放到'Recommender_System/data/ds'目录下。
