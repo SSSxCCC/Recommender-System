@@ -31,7 +31,7 @@ MovieLens-20m is too large to upload. If you need it, [download](http://files.gr
 
 算法：UserCF（基于用户的协同过滤）, ItemCF（基于物品的协同过滤）, LFM, SLIM, GMF, MLP, NeuMF, FM, DeepFM, MKR, RippleNet, KGCN等。
 
-评估指标：点击率预测ctr的auc和f1，topk评估的准确率precision和召回率recall.
+评估指标：点击率预测ctr的auc和f1，topk评估的准确率precision和召回率recall。
 
 ## 需求
 
